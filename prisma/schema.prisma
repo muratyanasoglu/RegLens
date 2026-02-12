@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Users & Authentication
+model User {
+  id                    String      @id @default(cuid())
+  username              String      @unique  // Giriş için email veya username kullanılır
+  email                 String      @unique
+  name                  String?
+  passwordHash          String?
+  securityQuestion      String?     // Şifre kurtarma sorusu (seçenek anahtarı)
+  securityAnswerHash    String?     // Cevabın hash'i; kurtarma için doğrulanır
+  mfaEnabled            Boolean     @default(false)
+  mfaSecret             String?
+  totpBackupCodes       Json?      @default("[]")
+  samlId                String?     @unique
+  oidcId                String?     @unique
+  lastLoginAt           DateTime?
+  lastLoginIp           String?
+  loginAttempts         Int         @default(0)
+  lockedUntil           DateTime?
+  emailVerified         DateTime?
+  role                  UserRole    @default(USER)
+  organizationId        String
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sessions              Session[]
+  auditLogs             AuditLog[]
+  tasks                 Task[]      @relation("assignee")
+  userSessions          UserSession[]
+  notifications         Notification[]
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([username])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String    // task_assigned, update_critical, task_due_soon
+  title     String
+  message   String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+}
+
+model Session {
+  id            String    @id @default(cuid())
+  sessionToken  String    @unique
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires       DateTime
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+  @@index([sessionToken])
+}
+
+model UserSession {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceName    String
+  deviceType    String
+  ipAddress     String
+  lastActiveAt  DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// Organization & Teams
+model Organization {
+  id                String      @id @default(cuid())
+  name              String
+  slug              String      @unique
+  dataResidency     String      @default("US") // US, EU, APAC
+  encryptionEnabled Boolean     @default(true)
+  ssoEnabled        Boolean     @default(false)
+  samlConfigured    Boolean     @default(false)
+  oidcConfigured    Boolean     @default(false)
+  users             User[]
+  complianceCerts   ComplianceCertification[]
+  securityPolicies  SecurityPolicy[]
+  auditLogs         AuditLog[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model ComplianceCertification {
+  id                String      @id @default(cuid())
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type              String      // SOC2, ISO27001, HIPAA, PCI-DSS, etc
+  status            String      @default("in_progress") // in_progress, certified, expired
+  certificationDate DateTime?
+  expiryDate        DateTime?
+  auditScope        String?
+  certifierName     String?
+  documentUrl       String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@unique([organizationId, type])
+  @@index([organizationId])
+}
+
+// Security Policies & Controls
+model SecurityPolicy {
+  id                String      @id @default(cuid())
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name              String
+  description       String
+  policyType        String      // data-protection, access-control, encryption, etc
+  isActive          Boolean     @default(true)
+  enforcedAt        DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([organizationId])
+}
+
+model AuditLog {
+  id                String      @id @default(cuid())
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action            String      // login, data_access, export, config_change, etc
+  resourceType      String
+  resourceId        String?
+  details           String      // JSON
+  ipAddress         String?
+  userAgent         String?
+  status            String      @default("success")
+  createdAt         DateTime    @default(now())
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+// Existing Core Models
+model Source {
+  id                String      @id @default(cuid())
+  organizationId    String      // Add org support
+  name              String
+  url               String
+  type              String
+  active            Boolean     @default(true)
+  lastPolled        DateTime?
+  pollInterval      Int         @default(3600) // seconds
+  updates           RegulatoryUpdate[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model RegulatoryUpdate {
+  id                String      @id @default(cuid())
+  sourceId          String
+  source            Source      @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  title             String
+  summary           String
+  rawText           String
+  normalizedText    String
+  hash              String      @unique
+  publishedAt       DateTime
+  status            String      @default("new")
+  riskLevel         String      @default("medium")
+  diffs             UpdateDiff[]
+  mappings          Mapping[]
+  tasks             Task[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([sourceId])
+  @@index([status])
+  @@index([riskLevel])
+}
+
+model UpdateDiff {
+  id                String      @id @default(cuid())
+  updateId          String
+  update            RegulatoryUpdate @relation(fields: [updateId], references: [id], onDelete: Cascade)
+  diffType          String
+  section           String
+  oldText           String?
+  newText           String
+  impact            String
+  createdAt         DateTime    @default(now())
+
+  @@index([updateId])
+}
+
+// Compliance Frameworks
+model Framework {
+  id                String      @id @default(cuid())
+  name              String      @unique
+  version           String
+  description       String
+  frameworkType     String      // standard, regulation, industry, custom
+  region            String      @default("global") // US, EU, APAC, etc
+  controls          Control[]
+  sourceMappings    FrameworkMapping[] @relation("source")
+  targetMappings    FrameworkMapping[] @relation("target")
+  createdAt         DateTime    @default(now())
+}
+
+model Control {
+  id                String      @id @default(cuid())
+  frameworkId       String
+  framework         Framework   @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  controlRef        String
+  title             String
+  description       String
+  category          String
+  implementationGuidance String?
+  mappings          Mapping[]
+  createdAt         DateTime    @default(now())
+
+  @@unique([frameworkId, controlRef])
+  @@index([frameworkId])
+}
+
+model Mapping {
+  id                String      @id @default(cuid())
+  updateId          String
+  update            RegulatoryUpdate @relation(fields: [updateId], references: [id], onDelete: Cascade)
+  controlId         String
+  control           Control     @relation(fields: [controlId], references: [id], onDelete: Cascade)
+  confidence        String      @default("medium")
+  rationale         String
+  aiGenerated       Boolean     @default(true)
+  manualReview      Boolean     @default(false)
+  reviewedBy        String?
+  status            String      @default("suggested") // suggested, approved, rejected
+  tasks             Task[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@unique([updateId, controlId])
+  @@index([updateId])
+  @@index([controlId])
+}
+
+model FrameworkMapping {
+  id                String      @id @default(cuid())
+  sourceFrameworkId String
+  sourceFramework   Framework   @relation("source", fields: [sourceFrameworkId], references: [id], onDelete: Cascade)
+  targetFrameworkId String
+  targetFramework   Framework   @relation("target", fields: [targetFrameworkId], references: [id], onDelete: Cascade)
+  mappingText       String
+  coverage          Int         // percentage
+
+  @@unique([sourceFrameworkId, targetFrameworkId])
+}
+
+model Task {
+  id                String      @id @default(cuid())
+  organizationId    String      // Org scope for multi-tenant
+  mappingId         String?
+  mapping           Mapping?    @relation(fields: [mappingId], references: [id], onDelete: SetNull)
+  updateId          String?
+  update            RegulatoryUpdate? @relation(fields: [updateId], references: [id], onDelete: SetNull)
+  title             String
+  description       String
+  status            String      @default("open")
+  priority          String      @default("medium")
+  assigneeId        String?
+  assignee          User?       @relation("assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate           DateTime?
+  evidence          EvidenceItem[]
+  auditPacks        AuditPack[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([organizationId])
+  @@index([mappingId])
+  @@index([updateId])
+  @@index([assigneeId])
+  @@index([status])
+}
+
+model EvidenceItem {
+  id                String      @id @default(cuid())
+  taskId            String
+  task              Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  title             String
+  template          String
+  status            String      @default("draft")
+  content           String?
+  attachments       Json?       @default("[]")
+  auditPacks        AuditPack[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([taskId])
+}
+
+model AuditPack {
+  id                String      @id @default(cuid())
+  organizationId    String      // Org scope for multi-tenant
+  title             String
+  description       String
+  status            String      @default("draft")
+  tasks             Task[]
+  evidence          EvidenceItem[]
+  exportFormat      String      @default("pdf") // pdf, xlsx, docx
+  createdAt         DateTime    @default(now())
+  finalizedAt       DateTime?
+  updatedAt         DateTime    @updatedAt
+
+  @@index([organizationId])
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  AUDITOR
+  USER
+  VIEWER
+}
