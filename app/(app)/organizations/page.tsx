@@ -9,12 +9,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Building2, Plus, Mail } from "lucide-react"
+import { useTranslations } from "@/components/locale-provider"
 
 type Org = { id: string; name: string; slug: string; role: string }
 
 export default function OrganizationsPage() {
   const router = useRouter()
   const { update } = useSession()
+  const t = useTranslations().t
   const [organizations, setOrganizations] = useState<Org[]>([])
   const [loading, setLoading] = useState(true)
   const [createOpen, setCreateOpen] = useState(false)
@@ -56,7 +58,7 @@ export default function OrganizationsPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error?.name?.[0] ?? data.error ?? "Oluşturulamadı.")
+        setError(data.error?.name?.[0] ?? data.error ?? t("organizations.createError"))
         return
       }
       setOrganizations((prev) => [...prev, { id: data.id, name: data.name, slug: data.slug, role: "ADMIN" }])
@@ -65,7 +67,7 @@ export default function OrganizationsPage() {
       router.refresh()
       router.push("/dashboard")
     } catch {
-      setError("Bağlantı hatası.")
+      setError(t("common.connectionError"))
     } finally {
       setCreating(false)
     }
@@ -74,34 +76,32 @@ export default function OrganizationsPage() {
   return (
     <div className="flex flex-col">
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Organizasyonlar</h1>
-        <p className="text-muted-foreground max-w-2xl">
-          Birden fazla organizasyon oluşturabilir veya davet kabul edebilirsiniz. <strong>Aktif organizasyon</strong> (sol menüden seçtiğiniz) tüm sayfalardaki verileri belirler: kaynaklar, güncellemeler, görevler, grafikler ve raporlar yalnızca o organizasyona aittir. Organizasyon değiştirdiğinizde veriler karışmaz.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("organizations.pageTitle")}</h1>
+        <p className="text-muted-foreground max-w-2xl" dangerouslySetInnerHTML={{ __html: t("organizations.pageDescription") }} />
       </div>
       <div className="content-max flex flex-col gap-6 py-6 lg:py-8">
         {loading ? (
-          <p className="text-muted-foreground">Yükleniyor...</p>
+          <p className="text-muted-foreground">{t("common.loading")}</p>
         ) : organizations.length === 0 && !createOpen ? (
           <Card className="card-premium max-w-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="h-5 w-5" />
-                Organizasyon yok
+                {t("organizations.noOrgs")}
               </CardTitle>
               <CardDescription>
-                Devam etmek için yeni bir organizasyon oluşturun veya size gönderilen bir daveti kabul edin.
+                {t("organizations.noOrgsDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <Button onClick={() => setCreateOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
-                Organizasyon oluştur
+                {t("organizations.createOrg")}
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/invites">
                   <Mail className="mr-2 h-4 w-4" />
-                  Davetlerim
+                  {t("organizations.invitesLink")}
                 </Link>
               </Button>
             </CardContent>
@@ -111,8 +111,8 @@ export default function OrganizationsPage() {
             {organizations.length > 0 && (
               <Card className="card-premium">
                 <CardHeader>
-                  <CardTitle>Organizasyonlarım</CardTitle>
-                  <CardDescription>Aktif olarak kullanmak istediğiniz organizasyonu seçin. Seçtiğiniz organizasyon tüm sayfalarda (dashboard, kaynaklar, güncellemeler, görevler, uyumluluk, grafikler) gösterilecek veriyi belirler.</CardDescription>
+                  <CardTitle>{t("organizations.myOrgs")}</CardTitle>
+                  <CardDescription>{t("organizations.selectOrgDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
@@ -135,8 +135,8 @@ export default function OrganizationsPage() {
             )}
             <Card className="card-premium max-w-lg">
               <CardHeader>
-                <CardTitle>Yeni organizasyon</CardTitle>
-                <CardDescription>Yeni bir organizasyon oluşturduğunuzda o organizasyonda yönetici (ADMIN) olursunuz; ardından takım daveti gönderebilirsiniz.</CardDescription>
+                <CardTitle>{t("organizations.newOrg")}</CardTitle>
+                <CardDescription>{t("organizations.newOrgDescription")}</CardDescription>
               </CardHeader>
               <CardContent>
                 {createOpen || organizations.length === 0 ? (
@@ -145,10 +145,10 @@ export default function OrganizationsPage() {
                       <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
                     )}
                     <div className="space-y-2">
-                      <Label htmlFor="org-name">Organizasyon adı</Label>
+                      <Label htmlFor="org-name">{t("organizations.orgName")}</Label>
                       <Input
                         id="org-name"
-                        placeholder="Örn. Acme Corp"
+                        placeholder={t("organizations.orgNamePlaceholder")}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -156,11 +156,11 @@ export default function OrganizationsPage() {
                     </div>
                     <div className="flex gap-2">
                       <Button type="submit" disabled={creating}>
-                        {creating ? "Oluşturuluyor..." : "Oluştur"}
+                        {creating ? t("organizations.creating") : t("organizations.createButton")}
                       </Button>
                       {organizations.length > 0 && (
                         <Button type="button" variant="outline" onClick={() => { setCreateOpen(false); setError(null); }}>
-                          İptal
+                          {t("common.cancel")}
                         </Button>
                       )}
                     </div>
@@ -168,7 +168,7 @@ export default function OrganizationsPage() {
                 ) : (
                   <Button onClick={() => setCreateOpen(true)}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Başka organizasyon oluştur
+                    {t("organizations.createOrg")}
                   </Button>
                 )}
               </CardContent>

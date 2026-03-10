@@ -5,17 +5,12 @@ import GitHubProvider from "next-auth/providers/github"
 import { prisma } from "@/lib/prisma"
 import { AuthService } from "@/lib/auth"
 
-function uniqueUsernameFromEmail(email: string): string {
-  const local = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "_").slice(0, 24) || "user"
-  return local
-}
-
 async function ensureUniqueUsername(base: string): Promise<string> {
   let username = base
   let n = 0
   while (await prisma.user.findUnique({ where: { username } })) {
     n += 1
-    username = `${base.slice(0, 20)}_${n}`
+    username = `${base.slice(0, 80)}_${n}`
   }
   return username
 }
@@ -133,7 +128,7 @@ export const authOptions: NextAuthOptions = {
                 include: { organizationMembers: { include: { organization: true } } },
               }))
         if (!dbUser) {
-          const username = await ensureUniqueUsername(uniqueUsernameFromEmail(email))
+          const username = await ensureUniqueUsername(email)
           const name = (user as { name?: string }).name ?? null
           dbUser = await prisma.user.create({
             data: {

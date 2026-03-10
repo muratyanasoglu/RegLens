@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "@/components/locale-provider"
 
 type MermaidDiagramProps = {
   code: string
@@ -10,6 +11,7 @@ type MermaidDiagramProps = {
 }
 
 export function MermaidDiagram({ code, className, title }: MermaidDiagramProps) {
+  const t = useTranslations().t
   const containerRef = useRef<HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -48,7 +50,7 @@ export function MermaidDiagram({ code, className, title }: MermaidDiagramProps) 
         }
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Diyagram yüklenemedi.")
+          setError(e instanceof Error ? e.message : t("docs.diagramLoadError"))
         }
       }
     }
@@ -57,7 +59,7 @@ export function MermaidDiagram({ code, className, title }: MermaidDiagramProps) 
     return () => {
       cancelled = true
     }
-  }, [mounted, code])
+  }, [mounted, code, t])
 
   if (!mounted) {
     return (
@@ -67,7 +69,7 @@ export function MermaidDiagram({ code, className, title }: MermaidDiagramProps) 
           className
         )}
       >
-        <span className="text-sm text-muted-foreground">Yükleniyor…</span>
+        <span className="text-sm text-muted-foreground">{t("common.loading")}</span>
       </div>
     )
   }

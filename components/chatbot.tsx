@@ -4,16 +4,16 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, X, Send, Loader2 } from "lucide-react"
+import { useTranslations } from "@/components/locale-provider"
 
 type Message = { role: "user" | "assistant"; content: string }
 
-const WELCOME =
-  "Merhaba. RegLens ve bu web sitesi hakkında sorularınızı sorabilirsiniz (Dashboard, Kaynaklar, Güncellemeler, Görevler, Kanıt, Denetim Paketleri, Ayarlar vb.)."
-
 export function Chatbot() {
+  const t = useTranslations().t
+  const welcome = t("chatbot.welcome")
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: WELCOME },
+    { role: "assistant", content: welcome },
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -43,14 +43,14 @@ export function Chatbot() {
       const reply =
         typeof data.reply === "string"
           ? data.reply
-          : "Yanıt alınamadı. Lütfen sadece site ile ilgili soru sorun."
+          : t("chatbot.connectionError")
       setMessages((prev) => [...prev, { role: "assistant", content: reply }])
     } catch {
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "Bağlantı hatası. Lütfen tekrar deneyin veya sadece site ile ilgili soru sorun.",
+          content: t("chatbot.connectionError"),
         },
       ])
     } finally {

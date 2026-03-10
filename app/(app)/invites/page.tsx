@@ -137,7 +137,7 @@ export default function InvitesPage() {
                     <UserPlus className="h-5 w-5" />
                     Arkadaşlık istekleri
                   </CardTitle>
-                  <CardDescription>Kabul ettiğinizde arkadaş listenize eklenir ve Mesajlar üzerinden sohbet edebilirsiniz.</CardDescription>
+                  <CardDescription>{t("invites.acceptDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">

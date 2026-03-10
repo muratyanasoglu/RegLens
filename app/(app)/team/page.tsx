@@ -121,7 +121,7 @@ export default function TeamPage() {
       const invRes = await fetch("/api/invites")
       if (invRes.ok) setInvites(await invRes.json())
     } catch {
-      setInviteError("Bağlantı hatası.")
+      setInviteError(t("common.connectionError"))
     }
     setInviteLoading(false)
   }
@@ -139,14 +139,14 @@ export default function TeamPage() {
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
               <div>
-                <CardTitle>Üyeler</CardTitle>
-                <CardDescription>Organizasyondaki kullanıcılar</CardDescription>
+                <CardTitle>{t("team.members")}</CardTitle>
+                <CardDescription>{t("team.usersInOrg")}</CardDescription>
               </div>
             </div>
             {canInvite && (
               <Button onClick={() => { setInviteOpen(true); setInviteSuccess(false); setInviteError(null); }}>
                 <UserPlus className="mr-2 h-4 w-4" />
-                Davet gönder
+                {t("team.inviteSend")}
               </Button>
             )}
           </CardHeader>
@@ -154,7 +154,7 @@ export default function TeamPage() {
             {loading ? (
               <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
             ) : members.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Henüz üye yok.</p>
+              <p className="text-sm text-muted-foreground">{t("team.noMembersYet")}</p>
             ) : (
               <ul className="space-y-3">
                 {members.map((u) => (
@@ -184,8 +184,8 @@ export default function TeamPage() {
             <CardHeader className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-primary" />
               <div>
-                <CardTitle>Bekleyen davetler</CardTitle>
-                <CardDescription>Davet edilen kullanıcı Davetler sayfasında ve bildirimde görecek.</CardDescription>
+                <CardTitle>{t("team.pendingInvites")}</CardTitle>
+                <CardDescription>{t("team.pendingInvitesDescription")}</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
@@ -219,15 +219,15 @@ export default function TeamPage() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Üye davet et</DialogTitle>
+            <DialogTitle>{t("team.inviteMember")}</DialogTitle>
             <p className="text-sm text-muted-foreground">
-              Kullanıcı adına göre arayın; davet gönderdiğiniz kişi bildirim ve Davetler sayfasında daveti görecek.
+              {t("team.inviteMemberDescription")}
             </p>
           </DialogHeader>
           {inviteSuccess ? (
             <div className="py-4">
-              <p className="text-sm text-primary font-medium">Davet gönderildi.</p>
-              <p className="text-xs text-muted-foreground mt-1">Kullanıcı Davetler sayfasından kabul veya reddedebilir.</p>
+              <p className="text-sm text-primary font-medium">{t("team.inviteSent")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("team.userCanAcceptDecline")}</p>
             </div>
           ) : (
             <form onSubmit={handleCreateInvite} className="space-y-4">
@@ -237,11 +237,11 @@ export default function TeamPage() {
                 </p>
               )}
               <div className="space-y-2">
-                <Label>Kullanıcı ara</Label>
+                <Label>{t("team.searchUser")}</Label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Kullanıcı adı, ad veya e-posta..."
+                    placeholder={t("team.searchUserPlaceholder")}
                     value={inviteSearch}
                     onChange={(e) => { setInviteSearch(e.target.value); setSelectedUser(null); }}
                     className="pl-9"
@@ -265,13 +265,13 @@ export default function TeamPage() {
                 )}
                 {selectedUser && (
                   <p className="text-sm text-muted-foreground">
-                    Seçilen: <strong>{selectedUser.name || selectedUser.username}</strong> (@{selectedUser.username})
-                    <Button type="button" variant="ghost" size="sm" className="ml-2" onClick={() => setSelectedUser(null)}>Değiştir</Button>
+                    {t("team.selected")}: <strong>{selectedUser.name || selectedUser.username}</strong> (@{selectedUser.username})
+                    <Button type="button" variant="ghost" size="sm" className="ml-2" onClick={() => setSelectedUser(null)}>{t("team.change")}</Button>
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label>Rol</Label>
+                <Label>{t("team.role")}</Label>
                 <Select value={inviteRole} onValueChange={setInviteRole}>
                   <SelectTrigger>
                     <SelectValue />
@@ -290,7 +290,7 @@ export default function TeamPage() {
                   {t("common.cancel")}
                 </Button>
                 <Button type="submit" disabled={inviteLoading || !selectedUser}>
-                  {inviteLoading ? t("common.loading") : "Davet gönder"}
+                  {inviteLoading ? t("common.loading") : t("team.inviteSend")}
                 </Button>
               </DialogFooter>
             </form>

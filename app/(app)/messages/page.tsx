@@ -184,7 +184,7 @@ export default function MessagesPage() {
       const { url, name } = await up.json()
       await sendMessage({
         toUserId: selectedUserId,
-        body: kind === "image" ? "📷 Resim" : "📎 Dosya",
+        body: kind === "image" ? `📷 ${t("common.image")}` : `📎 ${t("common.file")}`,
         type: kind,
         attachmentUrl: url,
         attachmentName: name,
@@ -269,7 +269,7 @@ export default function MessagesPage() {
                           {c.lastMessage && (
                             <p className="truncate text-xs text-muted-foreground">
                               {c.lastMessage.fromMe ? "Siz: " : ""}
-                              {c.lastMessage.type === "image" ? "📷 Resim" : c.lastMessage.type === "file" ? "📎 Dosya" : c.lastMessage.body}
+                              {c.lastMessage.type === "image" ? `📷 ${t("common.image")}` : c.lastMessage.type === "file" ? `📎 ${t("common.file")}` : c.lastMessage.body}
                             </p>
                           )}
                         </button>
@@ -316,7 +316,7 @@ export default function MessagesPage() {
                             </a>
                           ) : m.type === "file" && m.attachmentUrl ? (
                             <a href={m.attachmentUrl} download={m.attachmentName ?? undefined} className="flex items-center gap-2 underline">
-                              📎 {m.attachmentName ?? "Dosya"}
+                              📎 {m.attachmentName ?? t("common.file")}
                             </a>
                           ) : null}
                           {m.body && <p className="whitespace-pre-wrap break-words text-sm">{m.body}</p>}
@@ -345,10 +345,10 @@ export default function MessagesPage() {
                   className="hidden"
                   onChange={(e) => handleFile(e.target.files, "file")}
                 />
-                <Button type="button" variant="outline" size="icon" onClick={() => imageInputRef.current?.click()} disabled={sending} title="Resim">
+                <Button type="button" variant="outline" size="icon" onClick={() => imageInputRef.current?.click()} disabled={sending} title={t("common.image")}>
                   <ImageIcon className="h-4 w-4" />
                 </Button>
-                <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={sending} title="Dosya">
+                <Button type="button" variant="outline" size="icon" onClick={() => fileInputRef.current?.click()} disabled={sending} title={t("common.file")}>
                   <Paperclip className="h-4 w-4" />
                 </Button>
                 <Input

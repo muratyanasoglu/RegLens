@@ -197,7 +197,7 @@ export default function FriendsPage() {
               <Users className="h-5 w-5" />
               Arkadaşlarım
             </CardTitle>
-            <CardDescription>Mesajlar sayfasından arkadaşlarınızla sohbet edebilirsiniz.</CardDescription>
+            <CardDescription>{t("addFriend.chatFromMessages")}</CardDescription>
           </CardHeader>
           <CardContent>
             {friends.length === 0 ? (

@@ -1,12 +1,14 @@
 'use client'
 
 import { TranslatedPageHeader } from "@/components/translated-page-header"
+import { useTranslations } from "@/components/locale-provider"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Smartphone, Download, Lock, Share2, Bell, Zap } from 'lucide-react'
 
 export default function MobilePage() {
+  const t = useTranslations().t
   return (
     <>
       <TranslatedPageHeader
@@ -124,7 +126,7 @@ export default function MobilePage() {
             <div className="flex gap-3 p-3 rounded-lg border">
               <Share2 className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
-                <p className="font-medium">Fast Loading</p>
+                <p className="font-medium">{t("mobile.fastLoading")}</p>
                 <p className="text-sm text-muted-foreground">
                   Optimized for mobile networks
                 </p>

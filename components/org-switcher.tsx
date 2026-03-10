@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { Building2, ChevronDown, Plus } from "lucide-react"
+import { useTranslations } from "@/components/locale-provider"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -20,6 +21,7 @@ export function OrgSwitcher() {
   const { data: session, status, update } = useSession()
   const router = useRouter()
   const pathname = usePathname()
+  const t = useTranslations().t
   const [organizations, setOrganizations] = useState<Org[]>([])
   const [open, setOpen] = useState(false)
   const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
@@ -55,7 +57,7 @@ export function OrgSwitcher() {
       <Button variant="outline" size="sm" className="w-full justify-center gap-2" asChild>
         <Link href="/organizations">
           <Plus className="h-4 w-4" />
-          Organizasyon seçin
+          {t("organizations.selectOrg")}
         </Link>
       </Button>
     )
@@ -64,7 +66,7 @@ export function OrgSwitcher() {
   return (
     <div className="space-y-1">
       <p className="px-2 text-[10px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-        Aktif organizasyon
+        {t("dashboard.organizationsCurrent")}
       </p>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
@@ -78,7 +80,7 @@ export function OrgSwitcher() {
           >
             <span className="flex items-center gap-2 truncate">
               <Building2 className="h-4 w-4 shrink-0" />
-              <span className="truncate">{current?.name ?? "Organizasyon seçin"}</span>
+              <span className="truncate">{current?.name ?? t("organizations.selectOrg")}</span>
             </span>
             <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>

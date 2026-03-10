@@ -12,7 +12,10 @@
     "search": "Search",
     "notSet": "Not set",
     "noDate": "No date",
-    "unassigned": "Unassigned"
+    "unassigned": "Unassigned",
+    "image": "Image",
+    "file": "File",
+    "connectionError": "Connection error."
   },
   "badges": {
     "riskLevel": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
@@ -311,15 +314,50 @@
   },
   "team": {
     "title": "Team",
-    "description": "Organization members. Admins invite by username; invites appear in Invites and as notifications."
+    "description": "Organization members. Admins invite by username; invites appear in Invites and as notifications.",
+    "usersInOrg": "Users in the organization",
+    "inviteSend": "Send invite",
+    "inviteSent": "Invite sent.",
+    "members": "Members",
+    "noMembersYet": "No members yet.",
+    "pendingInvites": "Pending invites",
+    "pendingInvitesDescription": "Invited users will see the invite on the Invites page and in notifications.",
+    "inviteMember": "Invite member",
+    "inviteMemberDescription": "Search by username; the invited user will see the invite in notifications and on the Invites page.",
+    "userCanAcceptDecline": "The user can accept or decline from the Invites page.",
+    "searchUser": "Search user",
+    "searchUserPlaceholder": "Username, name or email...",
+    "selected": "Selected",
+    "change": "Change",
+    "role": "Role"
+  },
+  "organizations": {
+    "pageTitle": "Organizations",
+    "pageDescription": "You can create multiple organizations or accept invites. The <strong>active organization</strong> (selected from the sidebar) determines data on all pages: sources, updates, tasks, charts and reports belong only to that organization. Changing organization keeps data separate.",
+    "selectOrg": "Select organization",
+    "noOrgs": "No organizations",
+    "createOrg": "Create organization",
+    "myOrgs": "My organizations",
+    "orgName": "Organization name",
+    "createError": "Could not create.",
+    "noOrgsDescription": "Create a new organization or accept an invite to continue.",
+    "invitesLink": "My invites",
+    "newOrg": "New organization",
+    "newOrgDescription": "When you create an organization you become an admin (ADMIN); you can then send team invites.",
+    "orgNamePlaceholder": "e.g. Acme Corp",
+    "createButton": "Create",
+    "creating": "Creating...",
+    "selectOrgDescription": "Select the organization you want to use. It will determine data shown on all pages (dashboard, sources, updates, tasks, compliance, charts)."
   },
   "addFriend": {
     "title": "Add Friend",
-    "description": "Search by username and send a friend request."
+    "description": "Search by username and send a friend request.",
+    "chatFromMessages": "You can chat with friends from the Messages page."
   },
   "invites": {
     "title": "Invites",
-    "description": "Team invites and friend requests sent to you; accept or decline."
+    "description": "Team invites and friend requests sent to you; accept or decline.",
+    "acceptDescription": "When you accept, you are added to the friend list and can chat via Messages."
   },
   "messages": {
     "title": "Messages",
@@ -330,11 +368,15 @@
     "description": "Group chat with all members of your organization. Only members of this organization can see and send messages.",
     "orgOnly": "Organization members only",
     "noMessages": "No messages yet. Send the first one.",
-    "placeholder": "Type your message..."
+    "placeholder": "Type your message...",
+    "selectOrgOrMember": "Select an organization or be a member of this organization.",
+    "messagesLoadFailed": "Failed to load messages.",
+    "sendFailed": "Failed to send."
   },
   "mobile": {
     "title": "Mobile & PWA Support",
-    "description": "Install ComplianceHub as a mobile app on any device"
+    "description": "Install ComplianceHub as a mobile app on any device",
+    "fastLoading": "Fast Loading"
   },
   "updatesDetail": {
     "title": "Update Detail"
@@ -369,9 +411,14 @@
     "menuAuditPacks": "Audit Packs: Bundle tasks and evidence, export as PDF/Excel/CSV.",
     "menuFrameworks": "Frameworks / Compliance / Security: Frameworks, compliance overview and security settings."
   },
+  "chatbot": {
+    "welcome": "Hello. You can ask questions about RegLens and this website (Dashboard, Sources, Updates, Tasks, Evidence, Audit Packs, Settings, etc.).",
+    "connectionError": "Connection error. Please try again or ask only site-related questions."
+  },
   "docs": {
     "pageTitle": "Documentation",
     "pageDescription": "Architecture, data model, API and deployment.",
+    "diagramLoadError": "Failed to load diagram.",
     "diagramArchitecture": "High-level architecture",
     "diagramDataFlow": "Main entities and flow",
     "diagramER": "Database relationship diagram (simplified)",

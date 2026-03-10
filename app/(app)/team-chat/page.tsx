@@ -44,11 +44,11 @@ export default function TeamChatPage() {
         setMessages(data.messages ?? [])
         setError(null)
       } else if (res.status === 401 || res.status === 400) {
-        setError("Organizasyon seçin veya bu organizasyonda üye olun.")
+        setError(t("teamChat.selectOrgOrMember"))
         setMessages([])
       }
     } catch {
-      setError("Mesajlar yüklenemedi.")
+      setError(t("teamChat.messagesLoadFailed"))
     } finally {
       setLoading(false)
     }
@@ -87,7 +87,7 @@ export default function TeamChatPage() {
         setMessages((prev) => [...prev, msg])
       } else {
         const data = await res.json().catch(() => ({}))
-        setError(data.error ?? "Gönderilemedi.")
+        setError(data.error ?? t("teamChat.sendFailed"))
       }
     } finally {
       setSending(false)
@@ -165,7 +165,7 @@ export default function TeamChatPage() {
                           >
                             <img
                               src={msg.attachmentUrl}
-                              alt={msg.attachmentName ?? "Resim"}
+                              alt={msg.attachmentName ?? t("common.image")}
                               className="max-h-48 rounded-lg object-cover"
                             />
                           </a>
@@ -177,7 +177,7 @@ export default function TeamChatPage() {
                             rel="noopener noreferrer"
                             className="text-xs underline"
                           >
-                            {msg.attachmentName ?? "Dosya"}
+                            {msg.attachmentName ?? t("common.file")}
                           </a>
                         )}
                         {(msg.type === "text" || !msg.attachmentUrl) && msg.body && (

@@ -1,12 +1,15 @@
 "use client"
 
+import { useTheme } from "next-themes"
 import { useTranslations } from "@/components/locale-provider"
 
 const MERED_URL = "https://www.meredtechnology.com/"
 
 export function SiteFooter() {
+  const { resolvedTheme } = useTheme()
   const { t } = useTranslations()
   const year = new Date().getFullYear()
+  const logoSrc = resolvedTheme === "light" ? "/logo-light-mode.png" : "/logo.png"
 
   return (
     <footer className="border-t border-border/70 bg-muted/30">
@@ -22,7 +25,7 @@ export function SiteFooter() {
               title={t("siteFooter.visitAria")}
             >
               <img
-                src="/logo.png"
+                src={logoSrc}
                 alt={t("siteFooter.logoAlt")}
                 className="h-10 w-[220px] object-cover object-right sm:h-12 sm:w-[300px] lg:w-[360px]"
               />
