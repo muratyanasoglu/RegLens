@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -35,21 +36,25 @@ type DashboardMetrics = {
 }
 
 export default function AnalyticsPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/dashboard")
       .then((res) => (res.ok ? res.json() : null))
       .then(setMetrics)
       .catch(() => setMetrics(null))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   if (loading) {
     return (
       <>
-        <PageHeader title="Analytics & Reporting" description="Compliance dashboards and metrics" />
+        <TranslatedPageHeader titleKey="analytics.title" descriptionKey="analytics.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -72,14 +77,14 @@ export default function AnalyticsPage() {
 
   return (
     <>
-      <PageHeader
-        title="Analytics & Reporting"
-        description="Compliance dashboards, metrics, and reports from your data"
+      <TranslatedPageHeader
+titleKey="analytics.title"
+    descriptionKey="analytics.description"
       />
 
       <div className="content-max space-y-8 py-6 lg:py-8">
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Total Updates</CardTitle>
           </CardHeader>
@@ -88,7 +93,7 @@ export default function AnalyticsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Regulatory updates tracked</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Open Tasks</CardTitle>
           </CardHeader>
@@ -97,7 +102,7 @@ export default function AnalyticsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Remediation tasks pending</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Compliance Score</CardTitle>
           </CardHeader>
@@ -106,7 +111,7 @@ export default function AnalyticsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Tasks completed rate</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Critical Risks</CardTitle>
           </CardHeader>
@@ -125,7 +130,7 @@ export default function AnalyticsPage() {
         </TabsList>
 
         <TabsContent value="updates" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle className="text-sm">Updates by Month</CardTitle>
               <CardDescription>Regulatory updates from your sources</CardDescription>
@@ -145,7 +150,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="tasks" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle className="text-sm">Tasks by Status</CardTitle>
               <CardDescription>From your task list</CardDescription>
@@ -175,7 +180,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="risk" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle className="text-sm">Risk Distribution</CardTitle>
               <CardDescription>Update risk levels</CardDescription>

@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AuditPackStatusBadge } from "@/components/risk-badge"
@@ -20,21 +21,25 @@ type AuditPack = {
 }
 
 export default function AuditPacksPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [packs, setPacks] = useState<AuditPack[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/audit-packs")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setPacks(Array.isArray(data) ? data : []))
       .catch(() => setPacks([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Audit Packs" description="Audit-ready compliance packages" />
+        <TranslatedPageHeader titleKey="auditPacks.title" descriptionKey="auditPacks.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -44,9 +49,9 @@ export default function AuditPacksPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Audit Packs"
-        description="Generate and manage audit-ready compliance packages"
+      <TranslatedPageHeader
+        titleKey="auditPacks.title"
+        descriptionKey="auditPacks.description"
       >
         <Button size="sm" asChild>
           <Link href="/audit-packs/new">
@@ -54,7 +59,7 @@ export default function AuditPacksPage() {
             New Audit Pack
           </Link>
         </Button>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
         {packs.length === 0 ? (

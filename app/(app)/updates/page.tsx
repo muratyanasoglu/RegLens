@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import {
   Table,
   TableBody,
@@ -35,6 +36,8 @@ type Update = {
 }
 
 export default function UpdatesPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [updates, setUpdates] = useState<Update[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -42,6 +45,8 @@ export default function UpdatesPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all")
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/updates")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
@@ -61,7 +66,7 @@ export default function UpdatesPage() {
       })
       .catch(() => setUpdates([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const filtered = updates.filter((u) => {
     const matchesSearch =
@@ -77,7 +82,7 @@ export default function UpdatesPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Regulatory Updates" description="Track and analyze regulatory changes" />
+        <TranslatedPageHeader titleKey="updates.title" descriptionKey="updates.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -87,7 +92,7 @@ export default function UpdatesPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
+      <TranslatedPageHeader
         title="Regulatory Updates"
         description="Track and analyze regulatory changes across all sources"
       />
@@ -129,7 +134,7 @@ export default function UpdatesPage() {
           </Select>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-card">
+        <div className="card-premium overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
           <Table>
             <TableHeader>
               <TableRow>

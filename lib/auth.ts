@@ -1,9 +1,13 @@
 import crypto from "crypto"
 import { jwtVerify, SignJWT } from "jose"
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-in-production"
-)
+const rawJwtSecret = process.env.JWT_SECRET
+
+if (!rawJwtSecret && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET must be set in production for token security")
+}
+
+const JWT_SECRET = new TextEncoder().encode(rawJwtSecret || "dev-only-insecure-secret-change-me")
 const JWT_EXPIRATION = "24h"
 
 export interface TokenPayload {

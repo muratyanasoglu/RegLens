@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import {
   Card,
   CardContent,
@@ -176,9 +176,9 @@ export default function AuthenticationPage() {
   if (status === "loading" || profileLoading) {
     return (
       <>
-        <PageHeader
-          title="Kimlik Doğrulama ve Hesap"
-          description="Hesap bilgileri, şifre ve güvenlik sorusu"
+        <TranslatedPageHeader
+          titleKey="security.authentication"
+          descriptionKey="security.authenticationDesc"
         />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -190,9 +190,9 @@ export default function AuthenticationPage() {
   if (!session) {
     return (
       <>
-        <PageHeader
-          title="Kimlik Doğrulama ve Hesap"
-          description="Giriş yaparak hesap ayarlarınıza erişin"
+        <TranslatedPageHeader
+          titleKey="security.authentication"
+          descriptionKey="security.authenticationDescGuest"
         />
         <Card className="card-premium max-w-md">
           <CardContent className="pt-6">
@@ -210,9 +210,9 @@ export default function AuthenticationPage() {
 
   return (
     <>
-      <PageHeader
-        title="Kimlik Doğrulama ve Hesap"
-        description="Hesap bilgileri, şifre değiştirme ve güvenlik sorusu"
+      <TranslatedPageHeader
+        titleKey="security.authentication"
+        descriptionKey="security.authenticationDescAuth"
       />
 
       <div className="content-max py-6 lg:py-8">

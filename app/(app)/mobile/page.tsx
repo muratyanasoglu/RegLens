@@ -1,6 +1,6 @@
 'use client'
 
-import { PageHeader } from '@/components/page-header'
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,14 +9,14 @@ import { Smartphone, Download, Lock, Share2, Bell, Zap } from 'lucide-react'
 export default function MobilePage() {
   return (
     <>
-      <PageHeader
-        title="Mobile & PWA Support"
-        description="Install ComplianceHub as a mobile app on any device"
+      <TranslatedPageHeader
+        titleKey="mobile.title"
+        descriptionKey="mobile.description"
       />
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
         <div className="grid gap-6 md:grid-cols-2">
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Smartphone className="w-5 h-5" />
@@ -50,7 +50,7 @@ export default function MobilePage() {
           </CardContent>
         </Card>
 
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Smartphone className="w-5 h-5" />
@@ -85,7 +85,7 @@ export default function MobilePage() {
         </Card>
         </div>
 
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
         <CardHeader>
           <CardTitle>Progressive Web App Features</CardTitle>
         </CardHeader>
@@ -134,7 +134,7 @@ export default function MobilePage() {
         </CardContent>
         </Card>
 
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
         <CardHeader>
           <CardTitle>Device Support</CardTitle>
         </CardHeader>
@@ -160,7 +160,7 @@ export default function MobilePage() {
         </CardContent>
         </Card>
 
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
         <CardHeader>
           <CardTitle>Benefits of Mobile App</CardTitle>
         </CardHeader>

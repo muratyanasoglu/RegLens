@@ -7,39 +7,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Users & Authentication
+// Users & Authentication (organizasyona User.organizationId ile değil, OrganizationMember ile bağlı)
 model User {
-  id                    String      @id @default(cuid())
-  username              String      @unique  // Giriş için email veya username kullanılır
-  email                 String      @unique
-  name                  String?
-  passwordHash          String?
-  securityQuestion      String?     // Şifre kurtarma sorusu (seçenek anahtarı)
-  securityAnswerHash    String?     // Cevabın hash'i; kurtarma için doğrulanır
-  mfaEnabled            Boolean     @default(false)
-  mfaSecret             String?
-  totpBackupCodes       Json?      @default("[]")
-  samlId                String?     @unique
-  oidcId                String?     @unique
-  lastLoginAt           DateTime?
-  lastLoginIp           String?
-  loginAttempts         Int         @default(0)
-  lockedUntil           DateTime?
-  emailVerified         DateTime?
-  role                  UserRole    @default(USER)
-  organizationId        String
-  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  sessions              Session[]
-  auditLogs             AuditLog[]
-  tasks                 Task[]      @relation("assignee")
-  userSessions          UserSession[]
-  notifications         Notification[]
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  id                         String      @id @default(cuid())
+  username                   String      @unique
+  email                      String      @unique
+  name                       String?
+  passwordHash               String?
+  securityQuestion           String?
+  securityAnswerHash         String?
+  mfaEnabled                 Boolean     @default(false)
+  mfaSecret                  String?
+  totpBackupCodes            Json?       @default("[]")
+  samlId                     String?     @unique
+  oidcId                     String?     @unique
+  lastLoginAt                DateTime?
+  lastLoginIp                String?
+  loginAttempts              Int         @default(0)
+  lockedUntil                DateTime?
+  emailVerified              DateTime?
+  lastSelectedOrganizationId String?    // Seçili organizasyon (sidebar’dan değiştirilir)
+  sessions                   Session[]
+  auditLogs                  AuditLog[]
+  tasks                      Task[]      @relation("assignee")
+  userSessions               UserSession[]
+  notifications              Notification[]
+  invitesSent                Invite[]    @relation("invitedBy")
+  invitesReceived            Invite[]    @relation("invitee")
+  messagesSent               Message[]   @relation("sender")
+  messagesReceived           Message[]   @relation("receiver")
+  friendshipsInitiated      Friendship[] @relation("fromUser")
+  friendshipsReceived        Friendship[] @relation("toUser")
+  organizationMembers        OrganizationMember[]
+  organizationGroupMessages  OrganizationGroupMessage[]
+  createdAt                  DateTime    @default(now())
+  updatedAt                  DateTime    @updatedAt
+
+  @@index([email])
+  @@index([username])
+  @@index([lastSelectedOrganizationId])
+}
+
+// Kullanıcı–organizasyon çoklu ilişki; her org’da rol ayrı
+model OrganizationMember {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  role           UserRole
+
+  @@unique([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+// Arkadaşlık: kullanıcı adıyla arama, istek gönder, kabul/red
+model Friendship {
+  id        String   @id @default(cuid())
+  fromUserId String
+  fromUser   User    @relation("fromUser", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUserId   String
+  toUser     User    @relation("toUser", fields: [toUserId], references: [id], onDelete: Cascade)
+  status    String   @default("pending") // pending, accepted, declined
+  createdAt  DateTime @default(now())
+
+  @@unique([fromUserId, toUserId])
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([status])
+}
+
+// Davet: Takıma üye davet (kullanıcı adıyla); davet edilen kullanıcıda bildirim + Davetler'de görünür
+model Invite {
+  id              String    @id @default(cuid())
+  email           String?   // Eski akış (kayıt daveti) için opsiyonel
+  inviteeUserId   String?   // Mevcut kullanıcıya takım daveti
+  invitee         User?     @relation("invitee", fields: [inviteeUserId], references: [id], onDelete: Cascade)
+  role            UserRole
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedById     String
+  invitedBy       User      @relation("invitedBy", fields: [invitedById], references: [id], onDelete: Cascade)
+  token           String    @unique
+  status          String    @default("pending") // pending, accepted, expired, cancelled
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  createdAt       DateTime  @default(now())
 
   @@index([organizationId])
   @@index([email])
-  @@index([username])
+  @@index([inviteeUserId])
+  @@index([token])
+  @@index([status])
+}
+
+// Birebir mesajlaşma (arkadaşlarla); metin, resim, dosya
+model Message {
+  id              String   @id @default(cuid())
+  senderId        String
+  sender          User     @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId      String
+  receiver        User     @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  body            String   @default("")  // Metin (resim/dosyada açıklama olabilir)
+  type            String   @default("text") // text, image, file
+  attachmentUrl   String?  // Yüklenen dosya/resim URL
+  attachmentName  String?  // Orijinal dosya adı
+  readAt          DateTime?
+  createdAt       DateTime @default(now())
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
 }
 
 model Notification {
@@ -86,20 +165,39 @@ model UserSession {
 
 // Organization & Teams
 model Organization {
-  id                String      @id @default(cuid())
+  id                String               @id @default(cuid())
   name              String
-  slug              String      @unique
-  dataResidency     String      @default("US") // US, EU, APAC
-  encryptionEnabled Boolean     @default(true)
-  ssoEnabled        Boolean     @default(false)
-  samlConfigured    Boolean     @default(false)
-  oidcConfigured    Boolean     @default(false)
-  users             User[]
+  slug              String               @unique
+  dataResidency     String               @default("US")
+  encryptionEnabled Boolean              @default(true)
+  ssoEnabled        Boolean              @default(false)
+  samlConfigured    Boolean              @default(false)
+  oidcConfigured   Boolean              @default(false)
+  members           OrganizationMember[]
+  invites           Invite[]
   complianceCerts   ComplianceCertification[]
   securityPolicies  SecurityPolicy[]
   auditLogs         AuditLog[]
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  groupMessages     OrganizationGroupMessage[]
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+// Organizasyon içi grup sohbeti; sadece o organizasyondaki üyeler görür ve yazabilir
+model OrganizationGroupMessage {
+  id              String       @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  senderId        String
+  sender          User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body            String       @default("")
+  type            String       @default("text") // text, image, file
+  attachmentUrl   String?
+  attachmentName  String?
+  createdAt       DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([createdAt])
 }
 
 model ComplianceCertification {

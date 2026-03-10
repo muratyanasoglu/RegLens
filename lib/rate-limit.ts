@@ -30,6 +30,19 @@ export const exportRateLimiter = new Ratelimit({
   analytics: true,
 })
 
+export function getClientIdentifier(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for")
+  if (forwarded) {
+    const ip = forwarded.split(",")[0]?.trim()
+    if (ip) return ip
+  }
+  const realIp = request.headers.get("x-real-ip")
+  if (realIp) return realIp
+  const cfConnectingIp = request.headers.get("cf-connecting-ip")
+  if (cfConnectingIp) return cfConnectingIp
+  return "anonymous"
+}
+
 export async function checkRateLimit(
   identifier: string,
   limiter: Ratelimit

@@ -3,13 +3,14 @@
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { AuditPackStatusBadge, StatusBadge, PriorityBadge, EvidenceStatusBadge } from "@/components/risk-badge"
 import { format } from "date-fns"
 import { ArrowLeft, Printer, FileText, ListTodo, Loader2 } from "lucide-react"
+import { useTranslations } from "@/components/locale-provider"
 
 type PackTask = { id: string; title: string; priority: string; status: string; assignee?: { name: string | null; username: string } | null; mapping?: { control?: { controlRef: string } } }
 type PackEvidence = { id: string; title: string; status: string; template: string }
@@ -26,6 +27,7 @@ type Pack = {
 
 export default function AuditPackDetailPage() {
   const params = useParams()
+  const t = useTranslations().t
   const [pack, setPack] = useState<Pack | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -45,7 +47,7 @@ export default function AuditPackDetailPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Audit Pack" />
+        <TranslatedPageHeader titleKey="auditPacks.detail" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -56,9 +58,9 @@ export default function AuditPackDetailPage() {
   if (!pack) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
-        <p className="text-muted-foreground">Audit pack not found</p>
+        <p className="text-muted-foreground">{t("auditPack.notFound")}</p>
         <Link href="/audit-packs" className="mt-2 text-sm text-primary hover:underline">
-          Back to Audit Packs
+          {t("auditPack.backToPacks")}
         </Link>
       </div>
     )
@@ -69,20 +71,20 @@ export default function AuditPackDetailPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader title="Audit Pack">
+      <TranslatedPageHeader titleKey="auditPacks.detail">
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handlePrint}>
             <Printer className="mr-1 h-4 w-4" />
-            Export / Print
+            {t("auditPack.exportPrint")}
           </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href="/audit-packs">
               <ArrowLeft className="mr-1 h-4 w-4" />
-              Back
+              {t("common.back")}
             </Link>
           </Button>
         </div>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="flex flex-col gap-6 p-6 print:p-0">
         <Card className="card-premium print:border-0 print:shadow-none">
@@ -94,9 +96,9 @@ export default function AuditPackDetailPage() {
               <h2 className="text-xl font-semibold text-card-foreground">{pack.title}</h2>
               <p className="text-sm text-muted-foreground">{pack.description}</p>
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                <span>Created: {format(new Date(pack.createdAt), "MMM d, yyyy")}</span>
+                <span>{t("auditPack.created")}: {format(new Date(pack.createdAt), "MMM d, yyyy")}</span>
                 {pack.finalizedAt && (
-                  <span>Finalized: {format(new Date(pack.finalizedAt), "MMM d, yyyy")}</span>
+                  <span>{t("auditPack.finalized")}: {format(new Date(pack.finalizedAt), "MMM d, yyyy")}</span>
                 )}
               </div>
             </div>
@@ -161,7 +163,7 @@ export default function AuditPackDetailPage() {
 
         <div className="text-center print:mt-4">
           <p className="text-xs italic text-muted-foreground">
-            RegLens Audit Pack - Generated {format(new Date(), "MMM d, yyyy")}
+            RegLens - {t("auditPack.generated")} {format(new Date(), "MMM d, yyyy")}
           </p>
           <p className="mt-1 text-xs italic text-muted-foreground">Not legal advice. Human review required.</p>
         </div>

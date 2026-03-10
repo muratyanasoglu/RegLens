@@ -78,6 +78,7 @@ const config: Config = {
         lg: "var(--radius-lg)",
         md: "var(--radius)",
         sm: "calc(var(--radius) - 4px)",
+        "2xl": "var(--radius-2xl)",
       },
       boxShadow: {
         sm: "var(--shadow-sm)",
@@ -86,8 +87,10 @@ const config: Config = {
         lg: "var(--shadow-lg)",
         xl: "var(--shadow-xl)",
         glow: "var(--shadow-glow)",
+        "glow-strong": "var(--shadow-glow-strong)",
         card: "var(--shadow-card)",
         "card-hover": "var(--shadow-card-hover)",
+        elite: "var(--shadow-elite)",
       },
       keyframes: {
         "accordion-down": {

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,6 +19,8 @@ type Evidence = { id: string; title: string; status: string }
 
 export default function NewAuditPackPage() {
   const router = useRouter()
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [tasks, setTasks] = useState<Task[]>([])
   const [evidence, setEvidence] = useState<Evidence[]>([])
   const [loading, setLoading] = useState(true)
@@ -29,6 +32,8 @@ export default function NewAuditPackPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     Promise.all([
       fetch("/api/tasks").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/evidence").then((r) => (r.ok ? r.json() : [])),
@@ -39,7 +44,7 @@ export default function NewAuditPackPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   function toggleTask(taskId: string) {
     setSelectedTasks((prev) =>
@@ -85,7 +90,7 @@ export default function NewAuditPackPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Create Audit Pack" />
+        <TranslatedPageHeader titleKey="auditPacks.create" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -95,14 +100,14 @@ export default function NewAuditPackPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader title="Create Audit Pack">
+      <TranslatedPageHeader titleKey="auditPacks.create">
         <Button variant="outline" size="sm" asChild>
           <Link href="/audit-packs">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Cancel
           </Link>
         </Button>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="flex max-w-3xl flex-col gap-6 p-6">
         {error && <p className="text-sm text-destructive">{error}</p>}

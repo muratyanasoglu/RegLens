@@ -5,6 +5,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { AuthSessionProvider } from "@/components/providers/session-provider"
 import { ThemeProvider } from "@/components/theme-provider"
+import { LocaleProvider } from "@/components/locale-provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -59,7 +60,9 @@ export default function RootLayout({
           storageKey="reglens-theme"
           disableTransitionOnChange={false}
         >
+          <LocaleProvider>
           <AuthSessionProvider>{children}</AuthSessionProvider>
+        </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>

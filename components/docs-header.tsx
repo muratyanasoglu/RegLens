@@ -1,9 +1,14 @@
+"use client"
+
 import Link from "next/link"
 import { Eye, BookOpen, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { LanguageSwitcher } from "@/components/language-switcher"
+import { useTranslations } from "@/components/locale-provider"
 
 export function DocsHeader() {
+  const t = useTranslations().t
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="content-max flex h-14 items-center justify-between">
@@ -18,21 +23,22 @@ export function DocsHeader() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/guide" className="gap-1.5">
               <BookOpen className="h-4 w-4" />
-              Kılavuz
+              {t("landing.nav.guide")}
             </Link>
           </Button>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/docs" className="gap-1.5">
               <FileText className="h-4 w-4" />
-              Dokümantasyon
+              {t("landing.nav.docs")}
             </Link>
           </Button>
           <ThemeToggle />
+          <LanguageSwitcher />
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/login">Giriş</Link>
+            <Link href="/login">{t("landing.nav.login")}</Link>
           </Button>
           <Button size="sm" asChild>
-            <Link href="/register">Kayıt</Link>
+            <Link href="/register">{t("landing.nav.register")}</Link>
           </Button>
         </nav>
       </div>

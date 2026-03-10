@@ -1,4 +1,7 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
+import { useTranslations } from "@/components/locale-provider"
 import { cn } from "@/lib/utils"
 import type { RiskLevel, TaskStatus, TaskPriority, MappingConfidence, UpdateStatus, EvidenceStatus, AuditPackStatus } from "@/lib/types"
 
@@ -47,36 +50,37 @@ const auditPackStatusColors: Record<AuditPackStatus, string> = {
   finalized: "bg-success text-success-foreground",
 }
 
-function formatLabel(value: string): string {
-  return value
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-}
-
 export function RiskBadge({ level }: { level: RiskLevel }) {
-  return <Badge className={cn("border-0", riskColors[level])}>{formatLabel(level)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", riskColors[level])}>{t(`badges.riskLevel.${level}`)}</Badge>
 }
 
 export function StatusBadge({ status }: { status: TaskStatus }) {
-  return <Badge className={cn("border-0", statusColors[status])}>{formatLabel(status)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", statusColors[status])}>{t(`badges.taskStatus.${status}`)}</Badge>
 }
 
 export function PriorityBadge({ priority }: { priority: TaskPriority }) {
-  return <Badge className={cn("border-0", priorityColors[priority])}>{formatLabel(priority)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", priorityColors[priority])}>{t(`badges.taskPriority.${priority}`)}</Badge>
 }
 
 export function ConfidenceBadge({ confidence }: { confidence: MappingConfidence }) {
-  return <Badge className={cn("border-0", confidenceColors[confidence])}>{formatLabel(confidence)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", confidenceColors[confidence])}>{t(`badges.mappingConfidence.${confidence}`)}</Badge>
 }
 
 export function UpdateStatusBadge({ status }: { status: UpdateStatus }) {
-  return <Badge className={cn("border-0", updateStatusColors[status])}>{formatLabel(status)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", updateStatusColors[status])}>{t(`badges.updateStatus.${status}`)}</Badge>
 }
 
 export function EvidenceStatusBadge({ status }: { status: EvidenceStatus }) {
-  return <Badge className={cn("border-0", evidenceStatusColors[status])}>{formatLabel(status)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", evidenceStatusColors[status])}>{t(`badges.evidenceStatus.${status}`)}</Badge>
 }
 
 export function AuditPackStatusBadge({ status }: { status: AuditPackStatus }) {
-  return <Badge className={cn("border-0", auditPackStatusColors[status])}>{formatLabel(status)}</Badge>
+  const { t } = useTranslations()
+  return <Badge className={cn("border-0", auditPackStatusColors[status])}>{t(`badges.auditPackStatus.${status}`)}</Badge>
 }

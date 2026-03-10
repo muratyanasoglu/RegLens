@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -27,15 +27,15 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Settings"
-        description="Configure RegLens integrations and preferences"
+      <TranslatedPageHeader
+        titleKey="settings.title"
+        descriptionKey="settings.description"
       />
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
         <div className="mx-auto w-full max-w-2xl space-y-6">
-        {/* Hesap ve Kimlik Doğrulama */}
-        <Card className="card-premium">
+        {/* Account and Authentication */}
+        <Card className="card-premium card-hover">
           <CardHeader className="flex flex-row items-center gap-2">
             <User className="h-4 w-4 text-primary" />
             <div>
@@ -57,7 +57,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Database */}
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader className="flex flex-row items-center gap-2">
             <Database className="h-4 w-4 text-primary" />
             <div>
@@ -89,7 +89,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* AI Provider */}
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader className="flex flex-row items-center gap-2">
             <Brain className="h-4 w-4 text-primary" />
             <div>
@@ -141,7 +141,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Cron Jobs */}
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader className="flex flex-row items-center gap-2">
             <Clock className="h-4 w-4 text-primary" />
             <div>
@@ -181,7 +181,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Integrations */}
-        <Card className="card-premium">
+        <Card className="card-premium card-hover">
           <CardHeader className="flex flex-row items-center gap-2">
             <Link2 className="h-4 w-4 text-primary" />
             <div>

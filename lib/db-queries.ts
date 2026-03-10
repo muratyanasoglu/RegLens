@@ -207,10 +207,32 @@ export async function getAuditPackById(packId: string, organizationId: string) {
 }
 
 export async function getOrgUsers(organizationId: string) {
-  return prisma.user.findMany({
+  const members = await prisma.organizationMember.findMany({
     where: { organizationId },
-    select: { id: true, name: true, username: true, email: true, role: true },
+    include: { user: { select: { id: true, name: true, username: true, email: true } } },
   })
+  return members.map((m) => ({
+    id: m.user.id,
+    name: m.user.name,
+    username: m.user.username,
+    email: m.user.email,
+    role: m.role,
+  }))
+}
+
+export type UserOrganizationItem = { id: string; name: string; slug: string; role: string }
+
+export async function getOrganizationsForUser(userId: string): Promise<UserOrganizationItem[]> {
+  const members = await prisma.organizationMember.findMany({
+    where: { userId },
+    include: { organization: { select: { id: true, name: true, slug: true } } },
+  })
+  return members.map((m) => ({
+    id: m.organization.id,
+    name: m.organization.name,
+    slug: m.organization.slug,
+    role: m.role,
+  }))
 }
 
 export async function getAuditLogs(organizationId: string, limit = 100) {

@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,17 +21,21 @@ type Framework = {
 }
 
 export default function FrameworksPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [frameworks, setFrameworks] = useState<Framework[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/frameworks")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setFrameworks(Array.isArray(data) ? data : []))
       .catch(() => setFrameworks([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const filtered = frameworks.filter(
     (f) =>
@@ -62,7 +67,7 @@ export default function FrameworksPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Compliance Frameworks" description="Regulatory and compliance frameworks from database" />
+        <TranslatedPageHeader titleKey="frameworks.title" descriptionKey="frameworks.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -72,9 +77,9 @@ export default function FrameworksPage() {
 
   return (
     <>
-      <PageHeader
-        title="Compliance Frameworks"
-        description="Frameworks and controls from database"
+      <TranslatedPageHeader
+        titleKey="frameworks.title"
+        descriptionKey="frameworks.description"
       />
 
       <div className="content-max space-y-6 py-6 lg:py-8">

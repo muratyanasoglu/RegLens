@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import {
   Table,
   TableBody,
@@ -20,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { StatusBadge, PriorityBadge } from "@/components/risk-badge"
+import { useTranslations } from "@/components/locale-provider"
 import { format } from "date-fns"
 import { Search, ArrowRight, Loader2 } from "lucide-react"
 
@@ -54,6 +56,9 @@ function mapTask(t: {
 }
 
 export default function TasksPage() {
+  const t = useTranslations().t
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -61,12 +66,14 @@ export default function TasksPage() {
   const [priorityFilter, setPriorityFilter] = useState<string>("all")
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/tasks")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setTasks(Array.isArray(data) ? data.map(mapTask) : []))
       .catch(() => setTasks([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const filtered = tasks.filter((t) => {
     const matchesSearch =
@@ -86,7 +93,7 @@ export default function TasksPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Tasks" description="Remediation tasks from regulatory mappings" />
+        <TranslatedPageHeader titleKey="tasks.title" descriptionKey="tasks.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -96,9 +103,9 @@ export default function TasksPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Tasks"
-        description="Remediation tasks generated from regulatory mappings"
+      <TranslatedPageHeader
+        titleKey="tasks.title"
+      descriptionKey="tasks.description"
       />
 
       <div className="content-max flex flex-col gap-6 py-6 lg:py-8">
@@ -138,7 +145,7 @@ export default function TasksPage() {
           </Select>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-card">
+        <div className="card-premium overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -172,10 +179,10 @@ export default function TasksPage() {
                     <StatusBadge status={task.status as "open" | "in_progress" | "review" | "done"} />
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {task.assignee ?? "Unassigned"}
+                    {task.assignee ?? t("common.unassigned")}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {task.dueDate ? format(new Date(task.dueDate), "MMM d, yyyy") : "No date"}
+                    {task.dueDate ? format(new Date(task.dueDate), "MMM d, yyyy") : t("common.noDate")}
                   </TableCell>
                   <TableCell>
                     <Link href={`/tasks/${task.id}`}>
@@ -187,7 +194,7 @@ export default function TasksPage() {
               {sorted.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
-                    No tasks match your filters. Create tasks from updates or mappings.
+                    {t("tasks.noTasksMessage")}
                   </TableCell>
                 </TableRow>
               )}

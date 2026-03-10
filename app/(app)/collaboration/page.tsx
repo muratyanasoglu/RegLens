@@ -1,6 +1,6 @@
 'use client'
 
-import { PageHeader } from '@/components/page-header'
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -96,9 +96,9 @@ export default function CollaborationPage() {
 
   return (
     <>
-      <PageHeader
-        title="Collaboration & Workflow"
-        description="Team collaboration, approvals, and activity tracking"
+      <TranslatedPageHeader
+        titleKey="collaboration.title"
+        descriptionKey="collaboration.description"
       />
 
       <div className="content-max py-6 lg:py-8">
@@ -139,7 +139,7 @@ export default function CollaborationPage() {
         </TabsContent>
 
         <TabsContent value="approvals" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Approval Workflows</CardTitle>
               <CardDescription>Pending and completed approvals</CardDescription>
@@ -207,7 +207,7 @@ export default function CollaborationPage() {
         </TabsContent>
 
         <TabsContent value="comments" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Comments & Discussion Threads</CardTitle>
               <CardDescription>Active discussions on resources</CardDescription>
@@ -256,13 +256,13 @@ export default function CollaborationPage() {
 
         <TabsContent value="teams" className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Team Workspaces</h2>
+            <h2 className="section-title-accent text-lg font-semibold">Team Workspaces</h2>
             <Button>Create Workspace</Button>
           </div>
 
           <div className="space-y-3">
             {teams.map((team) => (
-              <Card key={team.name}>
+              <Card key={team.name} className="card-premium card-hover">
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">

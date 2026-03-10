@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -28,6 +29,8 @@ type Source = {
 }
 
 export default function SourcesPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [sourceList, setSourceList] = useState<Source[]>([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -38,6 +41,8 @@ export default function SourcesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/sources")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
@@ -50,7 +55,7 @@ export default function SourcesPage() {
       })
       .catch(() => setSourceList([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   async function handleAdd() {
     if (!newName.trim() || !newUrl.trim()) return
@@ -101,7 +106,7 @@ export default function SourcesPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Regulatory Sources" description="Manage RSS feeds and regulatory data sources" />
+        <TranslatedPageHeader titleKey="sources.title" descriptionKey="sources.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -111,7 +116,7 @@ export default function SourcesPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
+      <TranslatedPageHeader
         title="Regulatory Sources"
         description="Manage RSS feeds and regulatory data sources"
       >
@@ -152,7 +157,7 @@ export default function SourcesPage() {
             </div>
           </DialogContent>
         </Dialog>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="content-max grid gap-6 py-6 sm:grid-cols-2 lg:grid-cols-3 lg:py-8">
         {sourceList.length === 0 ? (

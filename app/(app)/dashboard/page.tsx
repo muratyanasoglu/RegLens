@@ -1,18 +1,25 @@
 import { redirect } from "next/navigation"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { DashboardSortable } from "@/components/dashboard/dashboard-sortable"
+import { DashboardOrgCards } from "@/components/dashboard/dashboard-org-cards"
 import { getSessionAndOrg } from "@/lib/auth-server"
 import {
   getDashboardMetrics,
   getUpdates,
   getTasks,
+  getOrganizationsForUser,
 } from "@/lib/db-queries"
 
 export default async function DashboardPage() {
-  const { organizationId } = await getSessionAndOrg()
-  if (!organizationId) redirect("/login")
+  const { session, organizationId } = await getSessionAndOrg()
+  if (!session?.user) redirect("/login")
+  if (!organizationId) redirect("/organizations")
 
-  const [metrics, updatesRaw, tasksRaw] = await Promise.all([
+  const userId = (session.user as { id?: string }).id
+  if (!userId) redirect("/login")
+
+  const [organizations, metrics, updatesRaw, tasksRaw] = await Promise.all([
+    getOrganizationsForUser(userId),
     getDashboardMetrics(organizationId),
     getUpdates(organizationId, 5),
     getTasks(organizationId),
@@ -45,10 +52,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Dashboard"
-        description="Regulatory compliance overview and risk metrics. Bölümleri sürükleyerek sıralayabilirsiniz."
-      />
+      <TranslatedPageHeader titleKey="dashboard.title" descriptionKey="dashboard.description" />
+      <DashboardOrgCards organizations={organizations} currentOrganizationId={organizationId} />
       <DashboardSortable
         metrics={metrics}
         recentUpdates={recentUpdates}

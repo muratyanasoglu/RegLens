@@ -33,6 +33,13 @@ export function MermaidDiagram({ code, className, title }: MermaidDiagramProps) 
           securityLevel: "loose",
           flowchart: { useMaxWidth: true, htmlLabels: true },
           er: { useMaxWidth: true },
+          themeVariables: {
+            lineColor: "#ffffff",
+            primaryBorderColor: "#ffffff",
+            secondaryBorderColor: "#ffffff",
+            tertiaryBorderColor: "#ffffff",
+            arrowheadColor: "#ffffff",
+          },
         })
         const { svg } = await mermaid.render(id, code)
         if (!cancelled && containerRef.current) {

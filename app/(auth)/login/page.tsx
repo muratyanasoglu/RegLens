@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Suspense } from "react"
+import { useState, Suspense, useEffect } from "react"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useTranslations } from "@/components/locale-provider"
 
 function LoginForm() {
   const router = useRouter()
@@ -24,12 +25,18 @@ function LoginForm() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const t = useTranslations().t
+
+  useEffect(() => {
+    const err = searchParams.get("error")
+    if (err) setError(t("auth.login.errorOAuth"))
+  }, [searchParams, t])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
     if (!login.trim() || !password) {
-      setError("E-posta veya kullanıcı adı ve şifre girin.")
+      setError(t("auth.login.errorRequired"))
       return
     }
     setLoading(true)
@@ -40,14 +47,14 @@ function LoginForm() {
         redirect: false,
       })
       if (res?.error) {
-        setError("Giriş bilgileri hatalı veya hesap kilitli.")
+        setError(t("auth.login.errorInvalid"))
         setLoading(false)
         return
       }
       router.push(callbackUrl)
       router.refresh()
     } catch {
-      setError("Giriş sırasında bir hata oluştu.")
+      setError(t("auth.login.errorGeneric"))
       setLoading(false)
     }
   }
@@ -56,10 +63,10 @@ function LoginForm() {
     <Card className="glass-card card-premium w-full max-w-md animate-fade-in-up shadow-card-hover">
       <CardHeader className="space-y-1 pb-6">
         <CardTitle className="font-display text-2xl font-bold tracking-tight">
-          Giriş yap
+          {t("auth.login.title")}
         </CardTitle>
         <CardDescription>
-          E-posta veya kullanıcı adı ile giriş yapın
+          {t("auth.login.description")}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
@@ -70,23 +77,19 @@ function LoginForm() {
             </p>
           )}
           <div className="space-y-2">
-            <Label htmlFor="login">
-              E-posta veya kullanıcı adı
-            </Label>
+            <Label htmlFor="login">{t("auth.login.emailOrUsername")}</Label>
             <Input
               id="login"
               type="text"
               autoComplete="username"
-              placeholder="ornek@email.com veya kullaniciadi"
+              placeholder={t("auth.login.placeholderEmail")}
               value={login}
               onChange={(e) => setLogin(e.target.value)}
               className="border-border bg-muted/50 placeholder:text-muted-foreground focus-visible:ring-primary"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">
-              Şifre
-            </Label>
+            <Label htmlFor="password">{t("auth.login.password")}</Label>
             <Input
               id="password"
               type="password"
@@ -102,7 +105,7 @@ function LoginForm() {
               href="/forgot-password"
               className="text-sm text-primary hover:text-primary/90 hover:underline"
             >
-              Şifremi unuttum
+              {t("auth.login.forgotPassword")}
             </Link>
           </div>
         </CardContent>
@@ -113,15 +116,43 @@ function LoginForm() {
             disabled={loading}
             size="lg"
           >
-            {loading ? "Giriş yapılıyor..." : "Giriş yap"}
+            {loading ? t("auth.login.submitting") : t("auth.login.submit")}
           </Button>
+          <div className="relative">
+              <span className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border" />
+              </span>
+              <span className="relative flex justify-center text-xs uppercase text-muted-foreground">
+                {t("auth.login.orDivider")}
+              </span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                size="lg"
+                onClick={() => signIn("google", { callbackUrl })}
+              >
+                {t("auth.login.signInWithGoogle")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                size="lg"
+                onClick={() => signIn("github", { callbackUrl })}
+              >
+                {t("auth.login.signInWithGitHub")}
+              </Button>
+            </div>
           <p className="text-center text-sm text-muted-foreground">
-            Hesabınız yok mu?{" "}
+            {t("auth.login.noAccount")}{" "}
             <Link
               href="/register"
               className="font-medium text-primary hover:text-primary/90 hover:underline"
             >
-              Kayıt olun
+              {t("auth.login.signUp")}
             </Link>
           </p>
         </CardFooter>
@@ -134,9 +165,9 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-<Card className="glass-card w-full max-w-md p-8">
-        <p className="text-muted-foreground">Yükleniyor...</p>
-      </Card>
+        <Card className="glass-card card-premium w-full max-w-md p-8">
+          <p className="text-muted-foreground">Loading...</p>
+        </Card>
       }
     >
       <LoginForm />

@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { notFound } from "next/navigation"
-import { PageHeader } from "@/components/page-header"
+import { notFound, redirect } from "next/navigation"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,7 @@ export default async function UpdateDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { organizationId } = await getSessionAndOrg()
-  if (!organizationId) notFound()
+  if (!organizationId) redirect("/organizations")
   const { id } = await params
   const update = await getUpdateById(id, organizationId)
   if (!update) notFound()
@@ -47,14 +47,14 @@ export default async function UpdateDetailPage({
 
   return (
     <div className="flex flex-col">
-      <PageHeader title="Update Detail">
+      <TranslatedPageHeader titleKey="updatesDetail.title">
         <Button variant="outline" size="sm" asChild>
           <Link href="/updates">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to Updates
           </Link>
         </Button>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
         <Card className="card-premium">

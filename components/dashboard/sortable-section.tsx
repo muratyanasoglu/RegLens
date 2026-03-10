@@ -4,16 +4,10 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "@/components/locale-provider"
 
-const SECTION_LABELS: Record<string, string> = {
-  metrics: "Metrikler",
-  charts: "Grafikler",
-  "recent-updates": "Son Güncellemeler",
-  "critical-tasks": "Kritik Görevler",
-  "activity-feed": "Aktivite",
-}
-
-type SectionId = keyof typeof SECTION_LABELS
+const SECTION_IDS = ["metrics", "charts", "recent-updates", "critical-tasks", "activity-feed"] as const
+type SectionId = (typeof SECTION_IDS)[number]
 
 type Props = {
   id: SectionId
@@ -29,6 +23,9 @@ export function SortableSection({ id, children }: Props) {
     transition,
     isDragging,
   } = useSortable({ id })
+  const t = useTranslations().t
+  const sectionLabel = t(`dashboard.sections.${id}`)
+  const dragHint = t("dashboard.dragHint")
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -46,7 +43,7 @@ export function SortableSection({ id, children }: Props) {
     >
       <button
         type="button"
-        aria-label={`Sıralamak için ${SECTION_LABELS[id] ?? id} bölümünü sürükle`}
+        aria-label={`${dragHint}: ${sectionLabel}`}
         className={cn(
           "flex shrink-0 touch-none cursor-grab items-center justify-center self-start rounded-xl border-0 p-2.5 text-muted-foreground transition-colors hover:bg-primary/15 hover:text-primary active:cursor-grabbing",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -62,4 +59,4 @@ export function SortableSection({ id, children }: Props) {
 }
 
 export type { SectionId }
-export { SECTION_LABELS }
+export { SECTION_IDS }

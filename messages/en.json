@@ -1,0 +1,382 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "notSet": "Not set",
+    "noDate": "No date",
+    "unassigned": "Unassigned"
+  },
+  "badges": {
+    "riskLevel": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+    "taskStatus": { "open": "Open", "in_progress": "In progress", "review": "Review", "done": "Done" },
+    "taskPriority": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+    "mappingConfidence": { "high": "High", "medium": "Medium", "low": "Low" },
+    "updateStatus": { "new": "New", "analyzed": "Analyzed", "mapped": "Mapped", "actioned": "Actioned" },
+    "evidenceStatus": { "draft": "Draft", "pending_review": "Pending review", "approved": "Approved" },
+    "auditPackStatus": { "draft": "Draft", "finalized": "Finalized" }
+  },
+  "search": {
+    "placeholder": "Search updates, tasks, controls or frameworks...",
+    "noResults": "No results found.",
+    "searchLabel": "Search"
+  },
+  "landing": {
+    "nav": {
+      "guide": "Guide",
+      "docs": "Documentation",
+      "login": "Log in",
+      "register": "Sign up"
+    },
+    "hero": {
+      "badgeOpenSource": "Open Source",
+      "badgeFree": "Free",
+      "title1": "Turn regulatory changes",
+      "title2": "into action",
+      "subtitle": "RegLens monitors regulatory sources, detects changes, maps to controls, and produces audit-ready evidence. Meet your enterprise RegTech needs with open source and free.",
+      "ctaStart": "Get started free",
+      "ctaLogin": "Log in",
+      "footerNote": "Registration and use are completely free. You can run it on your own server."
+    },
+    "why": {
+      "title": "Why RegLens?",
+      "problem": "Problem",
+      "solution": "Solution",
+      "problemDesc": "Compliance teams have to manually track dozens of sources; controls and evidence fall out of date, processes are fragmented.",
+      "solutionDesc": "RegLens automates the full change-to-action flow from source monitoring to audit packs; one dashboard for metrics, risks, and tasks."
+    },
+    "features": {
+      "title": "Compliance on one platform",
+      "subtitle": "From source monitoring to audit packs, the full process with RegLens.",
+      "dashboard": "Dashboard",
+      "dashboardDesc": "Real-time compliance metrics, risk distribution, task status, recent updates and critical tasks in one view.",
+      "trackSources": "Track Sources",
+      "trackSourcesDesc": "Add RSS and API sources; follow regulators and standards from one place.",
+      "detectChanges": "Detect Changes",
+      "detectChangesDesc": "Turn text into structured form with AI; classify new, updated and removed items.",
+      "mapControls": "Map to Controls",
+      "mapControlsDesc": "Automatic control mapping to frameworks like SOC 2, ISO 27001, GDPR, HIPAA; with confidence score.",
+      "generateTasks": "Generate Tasks",
+      "generateTasksDesc": "Auto-create tasks from mappings; team management with priority, assignment and due date.",
+      "collectEvidence": "Collect Evidence",
+      "collectEvidenceDesc": "Create evidence templates for audit; link to tasks and controls, manage approval workflow.",
+      "auditPacks": "Audit Packs",
+      "auditPacksDesc": "Bundle tasks and evidence in one pack; export as PDF, Excel, CSV.",
+      "aiTitle": "AI-Powered",
+      "aiSubtitle": "Structure text, map to controls and get evidence suggestions with Mistral AI.",
+      "normalize": "Normalize",
+      "normalizeDesc": "Turn raw regulatory text into title, summary, category and domain.",
+      "map": "Map",
+      "mapDesc": "Automatically map changes to framework controls; with confidence score and rationale.",
+      "evidenceGen": "Generate evidence",
+      "evidenceGenDesc": "Create evidence templates and text suggestions for tasks and controls.",
+      "openSourceTitle": "Open source and free",
+      "openSourceDesc": "RegLens is fully open source. Use it without license restrictions, run it in your own environment and adapt it to your needs. We welcome community contributions.",
+      "openSourceCta": "Get started now",
+      "openSourceLogin": "Already have an account? Log in",
+      "securityTitle": "Security and compliance",
+      "securityDesc": "Authentication, encrypted data, audit logs and industry-standard compliance.",
+      "auth": "Authentication (Auth)",
+      "https": "HTTPS",
+      "dataEncryption": "Data encryption",
+      "auditLogs": "Audit logs",
+      "gdpr": "GDPR compliant",
+      "soc2Hipaa": "SOC 2 / HIPAA ready",
+      "faqTitle": "Frequently asked questions",
+      "faqFreeQ": "Is RegLens completely free?",
+      "faqFreeA": "Yes. RegLens is open source and free to use. You can install and run it on your own server with no license restrictions.",
+      "faqDataQ": "Is my data safe?",
+      "faqDataA": "Your data is protected with authentication, HTTPS, encryption and audit logs. The architecture aims for GDPR and SOC 2 / HIPAA compliance.",
+      "faqExportQ": "Can I export my data?",
+      "faqExportA": "Yes. You can export audit packs as PDF, Excel and CSV. You have access to all your data in standard formats.",
+      "faqLangQ": "What languages are supported?",
+      "faqLangA": "The interface is available in English, French, Spanish and Turkish. Regulatory content is processed in the source language; normalization and mapping are done with AI.",
+      "finalCtaTitle": "Simplify compliance management",
+      "finalCtaSubtitle": "With RegLens, monitor sources, map changes, manage tasks and produce audit evidence from one place.",
+      "finalCtaButton": "Sign up free",
+      "footerGuide": "Guide",
+      "footerDocs": "Documentation",
+      "footerLogin": "Log in",
+      "footerRegister": "Sign up",
+      "footerLicense": "MIT License",
+      "footerTagline": "Open source · Free to use · Continuous Regulatory Change-to-Action",
+      "footerSupport": "Use GitHub Issues or community channels for support and contributions."
+    }
+  },
+  "sidebar": {
+    "reglens": "RegLens",
+    "tagline": "Regulatory Intelligence",
+    "monitor": "Monitor",
+    "dashboard": "Dashboard",
+    "sources": "Sources",
+    "updates": "Updates",
+    "controls": "Controls",
+    "tasks": "Tasks",
+    "workspace": "Workspace",
+    "evidence": "Evidence",
+    "auditPacks": "Audit Packs",
+    "team": "Team",
+    "teamChat": "Team Chat",
+    "addFriend": "Add Friend",
+    "invites": "Invites",
+    "messages": "Messages",
+    "governance": "Governance",
+    "frameworks": "Frameworks",
+    "compliance": "Compliance",
+    "security": "Security",
+    "help": "Help",
+    "guide": "Guide",
+    "documentation": "Documentation",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "description": "Log in with email or username",
+      "emailOrUsername": "Email or username",
+      "password": "Password",
+      "placeholderEmail": "example@email.com or username",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log in",
+      "submitting": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "errorRequired": "Please enter email or username and password.",
+      "errorInvalid": "Invalid credentials or account locked.",
+      "errorGeneric": "An error occurred while logging in.",
+      "orDivider": "or",
+      "signInWithGoogle": "Sign in with Google",
+      "signInWithGitHub": "Sign in with GitHub",
+      "errorOAuth": "Sign-in with this provider failed. If you use GitHub, ensure your email is visible in profile."
+    },
+    "register": {
+      "title": "Sign up",
+      "description": "Create an account with username, email and security question",
+      "username": "Username *",
+      "email": "Email *",
+      "name": "Full name (optional)",
+      "password": "Password *",
+      "securityQuestion": "Security question *",
+      "securityAnswer": "Security answer *",
+      "placeholderUsername": "example_user",
+      "placeholderEmail": "example@email.com",
+      "placeholderName": "Your name",
+      "placeholderPassword": "At least 8 characters",
+      "placeholderSelectQuestion": "Select a question",
+      "placeholderAnswer": "Enter your answer (used when password is forgotten)",
+      "usernameHint": "Letters, numbers, hyphens and underscores only (at least 3 characters)",
+      "submit": "Sign up",
+      "submitting": "Saving...",
+      "hasAccount": "Already have an account?",
+      "logIn": "Log in",
+      "orDivider": "or",
+      "signUpWithGoogle": "Sign up with Google",
+      "signUpWithGitHub": "Sign up with GitHub",
+      "errorRequired": "Please fill in all required fields.",
+      "errorFailed": "Registration failed.",
+      "errorGeneric": "An error occurred during registration."
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "descriptionRequest": "Enter your email or username; we'll show you the security question.",
+      "descriptionReset": "Answer the security question and set a new password.",
+      "emailOrUsername": "Email or username",
+      "securityQuestion": "Security question",
+      "yourAnswer": "Your answer",
+      "newPassword": "New password",
+      "placeholderAnswer": "Enter answer",
+      "getQuestion": "Get security question",
+      "updatePassword": "Update password",
+      "processing": "Processing...",
+      "back": "Back",
+      "backToLogin": "Back to login",
+      "successTitle": "Password updated",
+      "successDescription": "You can now log in with your new password.",
+      "goToLogin": "Go to login page",
+      "errorEmailRequired": "Please enter email or username.",
+      "errorRequestFailed": "Request failed.",
+      "errorRequest": "An error occurred while processing your request.",
+      "errorResetRequired": "Please enter security answer and a new password (at least 8 characters).",
+      "errorResetFailed": "Password could not be updated.",
+      "errorReset": "An error occurred while updating the password."
+    },
+    "securityQuestions": {
+      "mother_maiden": "What is your mother's maiden name?",
+      "first_pet": "What was your first pet's name?",
+      "birth_city": "What city were you born in?",
+      "first_school": "What was the name of your first school?",
+      "favorite_teacher": "What was your favorite teacher's name?",
+      "father_middle": "What is your father's middle name?",
+      "first_car": "What was the brand of your first car?",
+      "childhood_nickname": "What was your childhood nickname?"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Regulatory compliance overview and risk metrics. You can reorder sections by dragging.",
+    "sections": {
+      "metrics": "Metrics",
+      "charts": "Charts",
+      "recent-updates": "Recent Updates",
+      "critical-tasks": "Critical Tasks",
+      "activity-feed": "Activity"
+    },
+    "dragHint": "Drag to reorder section",
+    "organizationsSection": "Organizations",
+    "organizationsOpen": "Open",
+    "organizationsCurrent": "Current"
+  },
+  "auditPack": {
+    "created": "Created",
+    "finalized": "Finalized",
+    "generated": "Generated",
+    "notFound": "Audit pack not found",
+    "backToPacks": "Back to Audit Packs",
+    "exportPrint": "Export / Print"
+  },
+  "sources": {
+    "title": "Regulatory Sources",
+    "description": "Manage RSS feeds and regulatory data sources"
+  },
+  "updates": {
+    "title": "Regulatory Updates",
+    "description": "Track and analyze regulatory changes across all sources"
+  },
+  "controls": {
+    "title": "Controls Library",
+    "description": "Compliance frameworks and control mappings"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "Remediation tasks generated from regulatory mappings",
+    "detail": "Task Detail",
+    "noTasksMessage": "No tasks match your filters. Create tasks from updates or mappings."
+  },
+  "evidence": {
+    "title": "Evidence Workspace",
+    "description": "Audit-ready evidence templates and documentation"
+  },
+  "auditPacks": {
+    "title": "Audit Packs",
+    "description": "Generate and manage audit-ready compliance packages",
+    "detail": "Audit Pack",
+    "create": "Create Audit Pack"
+  },
+  "frameworks": {
+    "title": "Compliance Frameworks",
+    "description": "Regulatory and compliance frameworks from database",
+    "detail": "Framework"
+  },
+  "compliance": {
+    "title": "Compliance Frameworks",
+    "description": "Multi-framework compliance tracking and management"
+  },
+  "security": {
+    "title": "Security & Compliance",
+    "description": "Certifications and policies from database",
+    "auditLogs": "Audit Logs",
+    "auditLogsDesc": "Audit trail of system activities (from database)",
+    "authentication": "Authentication & Account",
+    "authenticationDesc": "Account details, password and security question",
+    "authenticationDescGuest": "Log in to access your account settings",
+    "authenticationDescAuth": "Account details, password change and security question"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure RegLens integrations and preferences"
+  },
+  "integrations": {
+    "title": "GRC Platform Integrations",
+    "description": "Connect with enterprise governance and risk management platforms"
+  },
+  "analytics": {
+    "title": "Analytics & Reporting",
+    "description": "Compliance dashboards, metrics, and reports from your data"
+  },
+  "aiInsights": {
+    "title": "AI Insights",
+    "description": "Recommendations and insights from your compliance data"
+  },
+  "collaboration": {
+    "title": "Collaboration & Workflow",
+    "description": "Team collaboration, approvals, and activity tracking"
+  },
+  "team": {
+    "title": "Team",
+    "description": "Organization members. Admins invite by username; invites appear in Invites and as notifications."
+  },
+  "addFriend": {
+    "title": "Add Friend",
+    "description": "Search by username and send a friend request."
+  },
+  "invites": {
+    "title": "Invites",
+    "description": "Team invites and friend requests sent to you; accept or decline."
+  },
+  "messages": {
+    "title": "Messages",
+    "description": "One-to-one chat with friends; send text, images, and files."
+  },
+  "teamChat": {
+    "title": "Team Chat",
+    "description": "Group chat with all members of your organization. Only members of this organization can see and send messages.",
+    "orgOnly": "Organization members only",
+    "noMessages": "No messages yet. Send the first one.",
+    "placeholder": "Type your message..."
+  },
+  "mobile": {
+    "title": "Mobile & PWA Support",
+    "description": "Install ComplianceHub as a mobile app on any device"
+  },
+  "updatesDetail": {
+    "title": "Update Detail"
+  },
+  "guide": {
+    "title": "User Guide",
+    "subtitle": "Learn how to use the RegLens website step by step.",
+    "gettingStarted": "1. Getting started",
+    "gettingStartedText": "Go to the Sign up page to create an account. You can log in with email or username and password. After login you are redirected to the Dashboard.",
+    "generalFlow": "2. General flow",
+    "generalFlowText": "In RegLens the workflow is: first add regulatory sources, the system detects updates; then map them to controls, generate tasks, collect evidence and finally export with audit packs.",
+    "diagramFlow": "Flow from sources to export",
+    "sidebarSection": "3. Sidebar and pages",
+    "sidebarSectionText": "After logging in you can reach all pages from the sidebar. Press ⌘K (or Ctrl+K) to open global search.",
+    "diagramSidebar": "Sidebar structure",
+    "addSource": "4. Adding sources",
+    "addSourceText": "To monitor regulatory content, first define a source. On the Sources page use \"Add Source\" to enter name and URL (RSS or API); after saving you can run a manual poll with \"Poll Now\".",
+    "diagramAddSource": "Steps to add a source",
+    "updateToTask": "5. From update to task",
+    "updateToTaskText": "Select a change from the Updates page. On the detail page map to controls (AI suggestion or manual). Create a task from the mapping, assign it, add evidence and include in an audit pack if needed.",
+    "diagramUpdateTask": "Update → Task → Evidence → Pack flow",
+    "notificationsSearch": "6. Notifications and search",
+    "notificationsSearchText": "Use the bell icon in the top right for assigned tasks and other notifications. Global search (⌘K) lets you search updates, tasks, controls or frameworks and go to the relevant page. Use the Recent Activity section on the Dashboard to track latest actions.",
+    "ctaStart": "Get started now",
+    "ctaDocs": "Documentation",
+    "menuDashboard": "Dashboard: Metrics, risk distribution, recent updates and critical tasks.",
+    "menuSources": "Sources: Add, edit and poll RSS/API sources.",
+    "menuUpdates": "Updates: Detected regulatory changes; filter by risk and status.",
+    "menuControls": "Controls: Framework controls and mappings to updates.",
+    "menuTasks": "Tasks: Generated tasks; assignment, priority and due date.",
+    "menuEvidence": "Evidence: Evidence templates and linking to tasks.",
+    "menuAuditPacks": "Audit Packs: Bundle tasks and evidence, export as PDF/Excel/CSV.",
+    "menuFrameworks": "Frameworks / Compliance / Security: Frameworks, compliance overview and security settings."
+  },
+  "docs": {
+    "pageTitle": "Documentation",
+    "pageDescription": "Architecture, data model, API and deployment.",
+    "diagramArchitecture": "High-level architecture",
+    "diagramDataFlow": "Main entities and flow",
+    "diagramER": "Database relationship diagram (simplified)",
+    "diagramPages": "Pages and API mapping",
+    "diagramSequence": "Sample API request sequence",
+    "diagramDeployment": "Deployment components"
+  }
+}

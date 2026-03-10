@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -13,11 +14,15 @@ type Framework = { id: string; name: string; controls: { id: string }[] }
 type Mapping = { id: string; controlId: string; control: { frameworkId: string } }
 
 export default function CompliancePage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [frameworks, setFrameworks] = useState<Framework[]>([])
   const [mappings, setMappings] = useState<Mapping[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     Promise.all([
       fetch("/api/frameworks").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/mappings").then((r) => (r.ok ? r.json() : [])),
@@ -28,7 +33,7 @@ export default function CompliancePage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const frameworkStats = frameworks.map((fw) => {
     const controlCount = fw.controls?.length ?? 0
@@ -57,7 +62,7 @@ export default function CompliancePage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Compliance Frameworks" description="Multi-framework compliance tracking" />
+        <TranslatedPageHeader titleKey="compliance.title" descriptionKey="compliance.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -67,9 +72,9 @@ export default function CompliancePage() {
 
   return (
     <>
-      <PageHeader
-        title="Compliance Frameworks"
-        description="Multi-framework compliance tracking and management"
+      <TranslatedPageHeader
+        titleKey="compliance.title"
+        descriptionKey="compliance.description"
       />
 
       <div className="content-max py-6 lg:py-8">
@@ -82,7 +87,7 @@ export default function CompliancePage() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
-            <Card className="card-premium">
+            <Card className="card-premium card-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Total Frameworks</CardTitle>
               </CardHeader>
@@ -91,7 +96,7 @@ export default function CompliancePage() {
                 <p className="mt-1 text-sm text-muted-foreground">From database</p>
               </CardContent>
             </Card>
-            <Card className="card-premium">
+            <Card className="card-premium card-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Avg Coverage</CardTitle>
               </CardHeader>
@@ -100,7 +105,7 @@ export default function CompliancePage() {
                 <p className="mt-1 text-sm text-muted-foreground">Across all frameworks</p>
               </CardContent>
             </Card>
-            <Card className="card-premium">
+            <Card className="card-premium card-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">Mapped Controls</CardTitle>
               </CardHeader>
@@ -128,7 +133,7 @@ export default function CompliancePage() {
               </Card>
             ) : (
               frameworkStats.map((fw) => (
-                <Card key={fw.id} className="card-premium">
+                <Card key={fw.id} className="card-premium card-hover">
                   <CardContent className="pt-6">
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -157,7 +162,7 @@ export default function CompliancePage() {
         </TabsContent>
 
         <TabsContent value="mappings" className="space-y-4">
-          <Card className="card-premium">
+          <Card className="card-premium card-hover">
             <CardHeader>
               <CardTitle>Organization Mappings</CardTitle>
               <CardDescription>

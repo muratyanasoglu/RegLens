@@ -15,6 +15,7 @@ const registerSchema = z.object({
   password: z.string().min(8, "Şifre en az 8 karakter olmalıdır"),
   securityQuestion: z.string().min(1, "Güvenlik sorusu seçin"),
   securityAnswer: z.string().min(2, "Güvenlik sorusu cevabı en az 2 karakter olmalıdır"),
+  inviteToken: z.string().optional(),
 })
 
 export async function POST(request: Request) {
@@ -27,7 +28,30 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
-    const { username, email, name, password, securityQuestion, securityAnswer } = parsed.data
+    const { username, email, name, password, securityQuestion, securityAnswer, inviteToken } = parsed.data
+
+    let organizationId: string
+    let role: "ADMIN" | "MANAGER" | "AUDITOR" | "USER" | "VIEWER" = "ADMIN"
+
+    if (inviteToken) {
+      const invite = await prisma.invite.findUnique({
+        where: { token: inviteToken },
+      })
+      if (!invite || invite.status !== "pending" || invite.expiresAt < new Date()) {
+        return NextResponse.json(
+          { error: "Davet geçersiz veya süresi dolmuş." },
+          { status: 400 }
+        )
+      }
+      if (invite.email.toLowerCase() !== email.toLowerCase()) {
+        return NextResponse.json(
+          { error: "Davet bu e-posta adresi için değil. Lütfen davette belirtilen e-postayı kullanın." },
+          { status: 400 }
+        )
+      }
+      organizationId = invite.organizationId
+      role = invite.role
+    }
 
     const questionValid = SECURITY_QUESTIONS.some((q) => q.value === securityQuestion)
     if (!questionValid) {
@@ -55,27 +79,30 @@ export async function POST(request: Request) {
       )
     }
 
-    const slugBase = username
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "") || "org"
-    let slug = slugBase
-    let n = 0
-    while (await prisma.organization.findUnique({ where: { slug } })) {
-      n += 1
-      slug = `${slugBase}-${n}`
-    }
-
-    const organization = await prisma.organization.create({
-      data: {
-        name: `${name || username} Workspace`,
-        slug,
-      },
-    })
-
     const passwordHash = AuthService.hashPassword(password)
     const securityAnswerHash = AuthService.hashPassword(securityAnswer.trim().toLowerCase())
+
+    if (inviteToken) {
+      const newUser = await prisma.user.create({
+        data: {
+          username: username.trim(),
+          email: email.toLowerCase(),
+          name: name?.trim() || null,
+          passwordHash,
+          securityQuestion,
+          securityAnswerHash,
+          lastSelectedOrganizationId: organizationId,
+        },
+      })
+      await prisma.organizationMember.create({
+        data: { userId: newUser.id, organizationId, role },
+      })
+      await prisma.invite.update({
+        where: { token: inviteToken },
+        data: { status: "accepted", acceptedAt: new Date() },
+      })
+      return NextResponse.json({ success: true })
+    }
 
     await prisma.user.create({
       data: {
@@ -85,11 +112,8 @@ export async function POST(request: Request) {
         passwordHash,
         securityQuestion,
         securityAnswerHash,
-        organizationId: organization.id,
-        role: "ADMIN",
       },
     })
-
     return NextResponse.json({ success: true })
   } catch (e) {
     console.error("Register error:", e)

@@ -13,10 +13,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useTranslations } from "@/components/locale-provider"
 
 type Step = "request" | "reset"
 
 export default function ForgotPasswordPage() {
+  const t = useTranslations().t
   const [step, setStep] = useState<Step>("request")
   const [emailOrUsername, setEmailOrUsername] = useState("")
   const [securityQuestion, setSecurityQuestion] = useState("")
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault()
     setError("")
     if (!emailOrUsername.trim()) {
-      setError("E-posta veya kullanıcı adı girin.")
+      setError(t("auth.forgotPassword.errorEmailRequired"))
       return
     }
     setLoading(true)
@@ -42,7 +44,7 @@ export default function ForgotPasswordPage() {
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? "İşlem başarısız.")
+        setError(data.error ?? t("auth.forgotPassword.errorRequestFailed"))
         setLoading(false)
         return
       }
@@ -50,7 +52,7 @@ export default function ForgotPasswordPage() {
       setStep("reset")
       setError("")
     } catch {
-      setError("İstek sırasında bir hata oluştu.")
+      setError(t("auth.forgotPassword.errorRequest"))
     }
     setLoading(false)
   }
@@ -59,7 +61,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault()
     setError("")
     if (!answer.trim() || !newPassword || newPassword.length < 8) {
-      setError("Güvenlik cevabı ve en az 8 karakterlik yeni şifre girin.")
+      setError(t("auth.forgotPassword.errorResetRequired"))
       return
     }
     setLoading(true)
@@ -77,30 +79,30 @@ export default function ForgotPasswordPage() {
       if (!res.ok) {
         setError(
           (data.error && (typeof data.error === "string" ? data.error : data.error.answer?.[0])) ??
-            "Şifre güncellenemedi."
+            t("auth.forgotPassword.errorResetFailed")
         )
         setLoading(false)
         return
       }
       setSuccess(true)
     } catch {
-      setError("Şifre güncellenirken bir hata oluştu.")
+      setError(t("auth.forgotPassword.errorReset"))
     }
     setLoading(false)
   }
 
   if (success) {
     return (
-      <Card className="w-full max-w-md animate-fade-in-up border-slate-700/80 bg-slate-800/60 shadow-xl backdrop-blur-sm text-slate-100">
+      <Card className="glass-card card-premium w-full max-w-md animate-fade-in-up shadow-card-hover">
         <CardHeader className="space-y-1 pb-6">
-          <CardTitle className="text-2xl font-semibold tracking-tight">Şifre güncellendi</CardTitle>
-          <CardDescription className="text-slate-400">
-            Yeni şifrenizle giriş yapabilirsiniz.
+          <CardTitle className="text-2xl font-semibold tracking-tight">{t("auth.forgotPassword.successTitle")}</CardTitle>
+          <CardDescription className="text-muted-foreground">
+            {t("auth.forgotPassword.successDescription")}
           </CardDescription>
         </CardHeader>
         <CardFooter>
           <Link href="/login" className="w-full">
-            <Button className="w-full" size="lg">Giriş sayfasına git</Button>
+            <Button className="w-full" size="lg">{t("auth.forgotPassword.goToLogin")}</Button>
           </Link>
         </CardFooter>
       </Card>
@@ -108,13 +110,13 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <Card className="w-full max-w-md animate-fade-in-up border-slate-700/80 bg-slate-800/60 shadow-xl backdrop-blur-sm text-slate-100">
+    <Card className="glass-card card-premium w-full max-w-md animate-fade-in-up shadow-card-hover">
       <CardHeader className="space-y-1 pb-6">
-        <CardTitle className="text-2xl font-semibold tracking-tight">Şifremi unuttum</CardTitle>
-        <CardDescription className="text-slate-400">
+        <CardTitle className="text-2xl font-semibold tracking-tight">{t("auth.forgotPassword.title")}</CardTitle>
+        <CardDescription className="text-muted-foreground">
           {step === "request"
-            ? "E-posta veya kullanıcı adınızı girin; size güvenlik sorusunu göstereceğiz."
-            : "Güvenlik sorusunu cevaplayıp yeni şifre belirleyin."}
+            ? t("auth.forgotPassword.descriptionRequest")
+            : t("auth.forgotPassword.descriptionReset")}
         </CardDescription>
       </CardHeader>
       <form onSubmit={step === "request" ? handleRequest : handleReset}>
@@ -126,12 +128,12 @@ export default function ForgotPasswordPage() {
           )}
           {step === "request" ? (
             <div className="space-y-2">
-              <Label htmlFor="emailOrUsername">E-posta veya kullanıcı adı</Label>
+              <Label htmlFor="emailOrUsername">{t("auth.forgotPassword.emailOrUsername")}</Label>
               <Input
                 id="emailOrUsername"
                 type="text"
                 autoComplete="username"
-                placeholder="ornek@email.com veya kullaniciadi"
+                placeholder={t("auth.login.placeholderEmail")}
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
                 className="border-slate-600 bg-slate-900/50 placeholder:text-slate-500 focus-visible:ring-primary"
@@ -140,30 +142,30 @@ export default function ForgotPasswordPage() {
           ) : (
             <>
               <div className="space-y-2">
-                <Label>Güvenlik sorusu</Label>
+                <Label>{t("auth.forgotPassword.securityQuestion")}</Label>
                 <p className="text-sm text-slate-300 rounded-md bg-slate-900/50 border border-slate-600 px-3 py-2">
-                  {securityQuestion}
+                  {securityQuestion && t(`auth.securityQuestions.${securityQuestion}`) !== `auth.securityQuestions.${securityQuestion}` ? t(`auth.securityQuestions.${securityQuestion}`) : securityQuestion}
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="answer">Cevabınız</Label>
+                <Label htmlFor="answer">{t("auth.forgotPassword.yourAnswer")}</Label>
                 <Input
                   id="answer"
                   type="text"
                   autoComplete="off"
-                  placeholder="Cevabı girin"
+                  placeholder={t("auth.forgotPassword.placeholderAnswer")}
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
                   className="border-slate-600 bg-slate-900/50 placeholder:text-slate-500 focus-visible:ring-primary"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="newPassword">Yeni şifre</Label>
+                <Label htmlFor="newPassword">{t("auth.forgotPassword.newPassword")}</Label>
                 <Input
                   id="newPassword"
                   type="password"
                   autoComplete="new-password"
-                  placeholder="En az 8 karakter"
+                  placeholder={t("auth.register.placeholderPassword")}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="border-slate-600 bg-slate-900/50 placeholder:text-slate-500 focus-visible:ring-primary"
@@ -175,10 +177,10 @@ export default function ForgotPasswordPage() {
         <CardFooter className="flex flex-col gap-4 pt-2">
           <Button type="submit" className="w-full" size="lg" disabled={loading}>
             {loading
-              ? "İşleniyor..."
+              ? t("auth.forgotPassword.processing")
               : step === "request"
-                ? "Güvenlik sorusunu getir"
-                : "Şifreyi güncelle"}
+                ? t("auth.forgotPassword.getQuestion")
+                : t("auth.forgotPassword.updatePassword")}
           </Button>
           {step === "reset" && (
             <Button
@@ -187,11 +189,11 @@ export default function ForgotPasswordPage() {
               className="w-full text-slate-400"
               onClick={() => setStep("request")}
             >
-              Geri
+              {t("auth.forgotPassword.back")}
             </Button>
           )}
           <Link href="/login" className="text-center text-sm font-medium text-primary hover:text-primary/90 hover:underline">
-            Giriş sayfasına dön
+            {t("auth.forgotPassword.backToLogin")}
           </Link>
         </CardFooter>
       </form>

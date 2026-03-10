@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -20,11 +21,15 @@ type AuditLogEntry = {
 }
 
 export default function AuditLogsPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [logs, setLogs] = useState<AuditLogEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/audit-logs")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
@@ -41,7 +46,7 @@ export default function AuditLogsPage() {
       })
       .catch(() => setLogs([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const filtered = logs.filter(
     (log) =>
@@ -67,7 +72,7 @@ export default function AuditLogsPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Audit Logs" description="System activities and access" />
+        <TranslatedPageHeader titleKey="security.auditLogs" descriptionKey="security.auditLogsDesc" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -77,9 +82,9 @@ export default function AuditLogsPage() {
 
   return (
     <>
-      <PageHeader
-        title="Audit Logs"
-        description="Audit trail of system activities (from database)"
+      <TranslatedPageHeader
+        titleKey="security.auditLogs"
+        descriptionKey="security.auditLogsDesc"
       />
 
       <div className="content-max py-6 lg:py-8">

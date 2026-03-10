@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import {
   Table,
   TableBody,
@@ -49,6 +50,8 @@ type Mapping = {
 }
 
 export default function ControlsPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [controls, setControls] = useState<Control[]>([])
   const [frameworks, setFrameworks] = useState<Framework[]>([])
   const [mappings, setMappings] = useState<Mapping[]>([])
@@ -58,6 +61,8 @@ export default function ControlsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     Promise.all([
       fetch("/api/controls").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/frameworks").then((r) => (r.ok ? r.json() : [])),
@@ -70,7 +75,7 @@ export default function ControlsPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const categories = Array.from(new Set(controls.map((c) => c.category)))
 
@@ -91,7 +96,7 @@ export default function ControlsPage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Controls Library" description="Compliance frameworks and control mappings" />
+        <TranslatedPageHeader titleKey="controls.title" descriptionKey="controls.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -101,9 +106,9 @@ export default function ControlsPage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Controls Library"
-        description="Compliance frameworks and control mappings"
+<TranslatedPageHeader
+        titleKey="controls.title"
+        descriptionKey="controls.description"
       />
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
@@ -112,7 +117,7 @@ export default function ControlsPage() {
             const fwControls = controls.filter((c) => c.frameworkId === fw.id)
             const fwMappings = mappings.filter((m) => fwControls.some((c) => c.id === m.controlId))
             return (
-              <Card key={fw.id} className="card-premium">
+              <Card key={fw.id} className="card-premium card-hover">
                 <CardHeader className="flex flex-row items-center gap-2 pb-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                     <Shield className="h-4 w-4 text-primary" />
@@ -178,7 +183,7 @@ export default function ControlsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-card">
+              <div className="card-premium overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -225,7 +230,7 @@ export default function ControlsPage() {
           </TabsContent>
 
           <TabsContent value="mappings" className="mt-4">
-<div className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-card">
+<div className="card-premium overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card">
             <Table>
                 <TableHeader>
                   <TableRow>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "@/components/locale-provider"
 import {
   FileText,
   ListTodo,
@@ -33,6 +34,7 @@ export function GlobalSearch() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<SearchResult | null>(null)
   const router = useRouter()
+  const t = useTranslations().t
 
   const runSearch = useCallback(async (q: string) => {
     if (!q || q.length < 2) {
@@ -92,14 +94,14 @@ export function GlobalSearch() {
           "max-w-[180px] sm:max-w-[220px]"
         )}
       >
-        <span className="hidden sm:inline">Ara...</span>
+        <span className="hidden sm:inline">{t("search.searchLabel")}...</span>
         <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline-flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
-          placeholder="Güncelleme, görev, kontrol veya çerçeve ara..."
+          placeholder={t("search.placeholder")}
           value={query}
           onValueChange={setQuery}
         />
@@ -110,12 +112,12 @@ export function GlobalSearch() {
             </div>
           )}
           {!loading && query.length >= 2 && !hasAny && (
-            <CommandEmpty>Sonuç bulunamadı.</CommandEmpty>
+            <CommandEmpty>{t("search.noResults")}</CommandEmpty>
           )}
           {!loading && hasAny && result && (
             <>
               {result.updates.length > 0 && (
-                <CommandGroup heading="Güncellemeler">
+                <CommandGroup heading={t("sidebar.updates")}>
                   {result.updates.map((u) => (
                     <CommandItem
                       key={u.id}
@@ -140,7 +142,7 @@ export function GlobalSearch() {
                 </CommandGroup>
               )}
               {result.tasks.length > 0 && (
-                <CommandGroup heading="Görevler">
+                <CommandGroup heading={t("sidebar.tasks")}>
                   {result.tasks.map((t) => (
                     <CommandItem
                       key={t.id}
@@ -159,7 +161,7 @@ export function GlobalSearch() {
                 </CommandGroup>
               )}
               {result.controls.length > 0 && (
-                <CommandGroup heading="Kontroller">
+                <CommandGroup heading={t("sidebar.controls")}>
                   {result.controls.map((c) => (
                     <CommandItem
                       key={c.id}
@@ -181,7 +183,7 @@ export function GlobalSearch() {
                 </CommandGroup>
               )}
               {result.frameworks.length > 0 && (
-                <CommandGroup heading="Çerçeveler">
+                <CommandGroup heading={t("sidebar.frameworks")}>
                   {result.frameworks.map((f) => (
                     <CommandItem
                       key={f.id}

@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -35,6 +36,8 @@ type EvidenceItem = {
 }
 
 export default function EvidencePage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [items, setItems] = useState<EvidenceItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
@@ -42,6 +45,8 @@ export default function EvidencePage() {
   const [previewItem, setPreviewItem] = useState<EvidenceItem | null>(null)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     fetch("/api/evidence")
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
@@ -50,7 +55,7 @@ export default function EvidencePage() {
       })
       .catch(() => setItems([]))
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const filtered = items.filter((ev) => {
     const taskTitle = ev.task?.title ?? ""
@@ -64,7 +69,7 @@ export default function EvidencePage() {
   if (loading) {
     return (
       <div className="flex flex-col">
-        <PageHeader title="Evidence Workspace" description="Audit-ready evidence templates" />
+        <TranslatedPageHeader titleKey="evidence.title" descriptionKey="evidence.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -74,9 +79,9 @@ export default function EvidencePage() {
 
   return (
     <div className="flex flex-col">
-      <PageHeader
-        title="Evidence Workspace"
-        description="Audit-ready evidence templates and documentation"
+      <TranslatedPageHeader
+titleKey="evidence.title"
+      descriptionKey="evidence.description"
       />
 
       <div className="content-max flex flex-col gap-6 py-6 lg:py-8">

@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { notFound } from "next/navigation"
-import { PageHeader } from "@/components/page-header"
+import { notFound, redirect } from "next/navigation"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,7 @@ export default async function TaskDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { organizationId } = await getSessionAndOrg()
-  if (!organizationId) notFound()
+  if (!organizationId) redirect("/organizations")
   const { id } = await params
   const task = await getTaskById(id, organizationId)
   if (!task) notFound()
@@ -28,14 +28,14 @@ export default async function TaskDetailPage({
 
   return (
     <div className="flex flex-col">
-      <PageHeader title="Task Detail">
+      <TranslatedPageHeader titleKey="tasks.detail">
         <Button variant="outline" size="sm" asChild>
           <Link href="/tasks">
             <ArrowLeft className="mr-1 h-4 w-4" />
             Back to Tasks
           </Link>
         </Button>
-      </PageHeader>
+      </TranslatedPageHeader>
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
         <Card className="card-premium">

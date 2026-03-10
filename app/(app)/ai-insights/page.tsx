@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { PageHeader } from "@/components/page-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -10,11 +11,15 @@ import { Badge } from "@/components/ui/badge"
 import { AlertCircle, Lightbulb, TrendingUp, Zap, Loader2 } from "lucide-react"
 
 export default function AIInsightsPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [mappings, setMappings] = useState<{ id: string; confidence: string; update?: { title: string }; control?: { controlRef: string } }[]>([])
   const [tasks, setTasks] = useState<{ id: string; status: string; title: string; priority: string }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     Promise.all([
       fetch("/api/mappings").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/tasks").then((r) => (r.ok ? r.json() : [])),
@@ -25,7 +30,7 @@ export default function AIInsightsPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const lowConfidenceMappings = mappings.filter((m) => m.confidence === "low")
   const openTasks = tasks.filter((t) => t.status !== "done")
@@ -88,7 +93,7 @@ export default function AIInsightsPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="AI Insights" description="Recommendations and predictions" />
+        <TranslatedPageHeader titleKey="aiInsights.title" descriptionKey="aiInsights.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -98,14 +103,14 @@ export default function AIInsightsPage() {
 
   return (
     <>
-      <PageHeader
-        title="AI Insights"
-        description="Recommendations and insights from your compliance data"
+      <TranslatedPageHeader
+        titleKey="aiInsights.title"
+        descriptionKey="aiInsights.description"
       />
 
       <div className="content-max space-y-8 py-6 lg:py-8">
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Total Mappings</CardTitle>
           </CardHeader>
@@ -114,7 +119,7 @@ export default function AIInsightsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Update-to-control mappings</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Open Tasks</CardTitle>
           </CardHeader>
@@ -123,7 +128,7 @@ export default function AIInsightsPage() {
             <p className="mt-1 text-sm text-muted-foreground">Pending remediation</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="card-premium card-hover">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Low Confidence</CardTitle>
           </CardHeader>
@@ -140,7 +145,7 @@ export default function AIInsightsPage() {
         </TabsList>
 
         <TabsContent value="recommendations" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Recommendations</CardTitle>
               <CardDescription>Based on your mappings and tasks</CardDescription>

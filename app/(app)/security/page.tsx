@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PageHeader } from "@/components/page-header"
+import { useSession } from "next-auth/react"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -25,11 +26,15 @@ type SecurityPolicy = {
 }
 
 export default function SecurityPage() {
+  const { data: session } = useSession()
+  const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [certifications, setCertifications] = useState<Certification[]>([])
   const [policies, setPolicies] = useState<SecurityPolicy[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!organizationId) return
+    setLoading(true)
     Promise.all([
       fetch("/api/security/certifications").then((r) => (r.ok ? r.json() : [])),
       fetch("/api/security/policies").then((r) => (r.ok ? r.json() : [])),
@@ -40,7 +45,7 @@ export default function SecurityPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [])
+  }, [organizationId])
 
   const securityMetrics = [
     { label: "Certifications", value: `${certifications.length}`, icon: Shield },
@@ -52,7 +57,7 @@ export default function SecurityPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Security & Compliance" description="Enterprise security" />
+        <TranslatedPageHeader titleKey="security.title" descriptionKey="security.description" />
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -62,12 +67,12 @@ export default function SecurityPage() {
 
   return (
     <>
-      <PageHeader title="Security & Compliance" description="Certifications and policies from database" />
+      <TranslatedPageHeader titleKey="security.title" descriptionKey="security.description" />
 
       <div className="content-max space-y-8 py-6 lg:py-8">
       <div className="grid gap-4 md:grid-cols-4">
         {securityMetrics.map((metric) => (
-          <Card key={metric.label}>
+          <Card key={metric.label} className="card-premium card-hover">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -89,7 +94,7 @@ export default function SecurityPage() {
         </TabsList>
 
         <TabsContent value="certifications" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Compliance Certifications</CardTitle>
               <CardDescription>From your organization</CardDescription>
@@ -123,7 +128,7 @@ export default function SecurityPage() {
         </TabsContent>
 
         <TabsContent value="data-residency" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Data Residency & Encryption</CardTitle>
               <CardDescription>Configure in organization settings</CardDescription>
@@ -139,7 +144,7 @@ export default function SecurityPage() {
         </TabsContent>
 
         <TabsContent value="policies" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Security Policies</CardTitle>
               <CardDescription>From your organization</CardDescription>

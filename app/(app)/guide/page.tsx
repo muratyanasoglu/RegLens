@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowRight, BookOpen } from "lucide-react"
-import { DocsHeader } from "@/components/docs-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { MermaidDiagram } from "@/components/mermaid-diagram"
 import { Button } from "@/components/ui/button"
 
@@ -66,22 +66,15 @@ flowchart TB
 
 export default function GuidePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <DocsHeader />
-      <main className="flex-1 content-max py-10">
+    <div className="flex flex-col">
+      <TranslatedPageHeader
+        titleKey="guide.title"
+        descriptionKey="guide.subtitle"
+      />
+      <div className="content-max py-6 lg:py-8">
         <div className="mx-auto max-w-3xl space-y-12">
-          <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-foreground">
-              <BookOpen className="h-8 w-8 text-primary" />
-              Kullanım Kılavuzu
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              RegLens web sitesini adım adım nasıl kullanacağınızı bu sayfadan öğrenebilirsiniz.
-            </p>
-          </div>
-
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">1. Başlarken</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">1. Başlarken</h2>
             <p className="text-muted-foreground">
               Hesap oluşturmak için <Link href="/register" className="text-primary underline">Kayıt Ol</Link> sayfasına gidin.
               E-posta veya kullanıcı adı ve şifre ile giriş yapabilirsiniz. Giriş sonrası otomatik olarak <strong>Dashboard</strong> sayfasına yönlendirilirsiniz.
@@ -89,9 +82,9 @@ export default function GuidePage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">2. Genel akış</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">2. Genel akış</h2>
             <p className="text-muted-foreground">
-              RegLens’te iş akışı: önce düzenleyici <strong>kaynakları</strong> ekleyin, sistem <strong>güncellemeleri</strong> tespit etsin;
+              RegLens'te iş akışı: önce düzenleyici <strong>kaynakları</strong> ekleyin, sistem <strong>güncellemeleri</strong> tespit etsin;
               sonra bunları <strong>kontrollere</strong> eşleyin, <strong>görevler</strong> üretin, <strong>kanıt</strong> toplayın ve sonunda <strong>denetim paketleri</strong> ile dışa aktarın.
             </p>
             <MermaidDiagram
@@ -101,7 +94,7 @@ export default function GuidePage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">3. Sol menü ve sayfalar</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">3. Sol menü ve sayfalar</h2>
             <p className="text-muted-foreground">
               Giriş yaptıktan sonra soldaki menüden tüm sayfalara ulaşırsınız. <strong>⌘K</strong> (veya <strong>Ctrl+K</strong>) ile global arama açabilirsiniz.
             </p>
@@ -122,7 +115,7 @@ export default function GuidePage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">4. Kaynak ekleme</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">4. Kaynak ekleme</h2>
             <p className="text-muted-foreground">
               Düzenleyici içerikleri izlemek için önce kaynak tanımlayın. Kaynaklar sayfasında &quot;Add Source&quot; ile isim ve URL (RSS veya API) girin; kaydettikten sonra &quot;Poll Now&quot; ile manuel tarama yapabilirsiniz.
             </p>
@@ -133,7 +126,7 @@ export default function GuidePage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">5. Güncellemeden göreve</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">5. Güncellemeden göreve</h2>
             <p className="text-muted-foreground">
               Güncellemeler sayfasından bir değişiklik seçin. Detay sayfasında kontrollere eşleme yapın (AI önerisi veya manuel). Eşlemeden görev oluşturun, atama yapın, kanıt ekleyin ve gerekirse denetim paketine dahil edin.
             </p>
@@ -144,25 +137,22 @@ export default function GuidePage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">6. Bildirimler ve arama</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">6. Bildirimler ve arama</h2>
             <p className="text-muted-foreground">
-              Sağ üstteki <strong>çan ikonu</strong> ile atanan görevler ve diğer bildirimlere bakabilirsiniz. <strong>Global arama</strong> (⌘K) ile güncelleme, görev, kontrol veya çerçeve arayıp ilgili sayfaya gidebilirsiniz. Dashboard’daki <strong>Son Aktiviteler</strong> bölümü ile son işlemleri takip edebilirsiniz.
+              Sağ üstteki <strong>çan ikonu</strong> ile atanan görevler ve diğer bildirimlere bakabilirsiniz. <strong>Global arama</strong> (⌘K) ile güncelleme, görev, kontrol veya çerçeve arayıp ilgili sayfaya gidebilirsiniz. Dashboard'daki <strong>Son Aktiviteler</strong> bölümü ile son işlemleri takip edebilirsiniz.
             </p>
           </section>
 
           <section className="flex flex-wrap gap-4 border-t border-border/60 pt-10">
-            <Button asChild>
-              <Link href="/register" className="gap-2">
-                Hemen başlayın
+            <Button variant="outline" asChild>
+              <Link href="/docs" className="gap-2">
+                Dokümantasyon
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link href="/docs">Dokümantasyon</Link>
-            </Button>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   )
 }

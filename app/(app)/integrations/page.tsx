@@ -1,6 +1,6 @@
 'use client'
 
-import { PageHeader } from '@/components/page-header'
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -62,9 +62,9 @@ export default function IntegrationsPage() {
 
   return (
     <>
-      <PageHeader
-        title="GRC Platform Integrations"
-        description="Connect with enterprise governance and risk management platforms"
+      <TranslatedPageHeader
+        titleKey="integrations.title"
+        descriptionKey="integrations.description"
       />
 
       <div className="content-max py-6 lg:py-8">
@@ -133,7 +133,7 @@ export default function IntegrationsPage() {
         <TabsContent value="available" className="space-y-4">
           <div className="space-y-3">
             {availablePlatforms.map((platform) => (
-              <Card key={platform.name}>
+              <Card key={platform.name} className="card-premium card-hover">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -155,7 +155,7 @@ export default function IntegrationsPage() {
         </TabsContent>
 
         <TabsContent value="logs" className="space-y-4">
-          <Card>
+          <Card className="card-premium">
             <CardHeader>
               <CardTitle>Sync History</CardTitle>
             </CardHeader>

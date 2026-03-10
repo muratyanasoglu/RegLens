@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { FileText, ArrowRight } from "lucide-react"
-import { DocsHeader } from "@/components/docs-header"
+import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { MermaidDiagram } from "@/components/mermaid-diagram"
 import { Button } from "@/components/ui/button"
 
@@ -172,14 +172,14 @@ flowchart TB
     K[Settings]
   end
   subgraph API Katmanı
-    L[/api/dashboard]
-    M[/api/sources]
-    N[/api/updates]
-    O[/api/controls]
-    P[/api/tasks]
-    Q[/api/evidence]
-    R[/api/audit-packs]
-    S[/api/ai/*]
+    L["/api/dashboard"]
+    M["/api/sources"]
+    N["/api/updates"]
+    O["/api/controls"]
+    P["/api/tasks"]
+    Q["/api/evidence"]
+    R["/api/audit-packs"]
+    S["/api/ai/*"]
   end
   A --> L
   B --> M
@@ -195,29 +195,23 @@ flowchart TB
 
 export default function DocsPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <DocsHeader />
-      <main className="flex-1 content-max py-10">
+    <div className="flex flex-col">
+      <TranslatedPageHeader
+        titleKey="docs.pageTitle"
+        descriptionKey="docs.pageDescription"
+      />
+      <div className="content-max py-6 lg:py-8">
         <div className="mx-auto max-w-3xl space-y-12">
-          <div>
-            <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight text-foreground">
-              <FileText className="h-8 w-8 text-primary" />
-              Dokümantasyon
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              RegLens projesinin mimarisi, veri modeli, API ve dağıtım bilgileri.
-            </p>
-          </div>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">1. Proje özeti</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">1. Proje özeti</h2>
             <p className="text-muted-foreground">
               RegLens, düzenleyici kaynakları izleyen, değişiklikleri tespit eden, kontrollere eşleyen ve görev/kanıt üreten bir <strong>RegTech</strong> platformudur. Açık kaynak ve ücretsizdir; Next.js, Prisma ve Mistral AI ile geliştirilmiştir.
             </p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">2. Mimari</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">2. Mimari</h2>
             <p className="text-muted-foreground">
               Tek sayfa uygulaması (SPA) tarafında React 19 ve Next.js 16 App Router kullanılır. API istekleri Next.js API Routes üzerinden gider; kimlik doğrulama Auth.js (NextAuth) ile yapılır. Veriler MySQL veritabanında Prisma ORM ile yönetilir. AI işlemleri (normalize, map, evidence) Mistral API ile çalışır.
             </p>
@@ -228,7 +222,7 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">3. Teknoloji yığını</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">3. Teknoloji yığını</h2>
             <ul className="list-inside list-disc space-y-1 text-muted-foreground">
               <li><strong>Frontend:</strong> React 19, Next.js 16 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Recharts</li>
               <li><strong>Backend:</strong> Next.js API Routes, Auth.js (NextAuth)</li>
@@ -239,7 +233,7 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">4. Veri modeli (kavramsal)</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">4. Veri modeli (kavramsal)</h2>
             <p className="text-muted-foreground">
               <strong>Organization</strong> altında kullanıcılar ve kaynaklar yer alır. <strong>Source</strong> (RSS/API) düzenleyici içerikleri çeker; <strong>RegulatoryUpdate</strong> olarak saklanır. <strong>Framework</strong> ve <strong>Control</strong> çerçeve tanımlarıdır. <strong>Mapping</strong>, güncellemeyi kontrole bağlar. <strong>Task</strong> eşlemeden üretilir; <strong>EvidenceItem</strong> kanıtları görevlere bağlıdır. <strong>AuditPack</strong> görev ve kanıtları paketleyip dışa aktarır.
             </p>
@@ -254,9 +248,9 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">5. Uygulama ve API modülleri</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">5. Uygulama ve API modülleri</h2>
             <p className="text-muted-foreground">
-              Her sayfa ilgili API route’larına bağlıdır. AI endpoint’leri (/api/ai/normalize, map, evidence) Mistral ile çalışır. Cron ile /api/cron/poll-sources kaynakları periyodik tarayabilir.
+              Her sayfa ilgili API route'larına bağlıdır. AI endpoint'leri (/api/ai/normalize, map, evidence) Mistral ile çalışır. Cron ile /api/cron/poll-sources kaynakları periyodik tarayabilir.
             </p>
             <MermaidDiagram
               code={featureModulesDiagram}
@@ -265,7 +259,7 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">6. API istek akışı</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">6. API istek akışı</h2>
             <p className="text-muted-foreground">
               Her istekte oturum kontrolü yapılır; yetkili kullanıcılar için veritabanı ve gerekirse Mistral AI çağrılır. Yetkisiz isteklerde 401 dönülür.
             </p>
@@ -276,7 +270,7 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">7. Dağıtım</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">7. Dağıtım</h2>
             <p className="text-muted-foreground">
               Proje Vercel veya benzeri bir Node.js ortamında çalıştırılabilir. <code className="rounded bg-muted px-1.5 py-0.5 text-sm">DATABASE_URL</code>, <code className="rounded bg-muted px-1.5 py-0.5 text-sm">NEXTAUTH_SECRET</code>, <code className="rounded bg-muted px-1.5 py-0.5 text-sm">NEXTAUTH_URL</code> ve isteğe bağlı <code className="rounded bg-muted px-1.5 py-0.5 text-sm">MISTRAL_API_KEY</code> ortam değişkenleri tanımlanmalıdır. Migrations ile veritabanı şeması uygulanır.
             </p>
@@ -287,25 +281,22 @@ export default function DocsPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">8. Güvenlik ve uyumluluk</h2>
+            <h2 className="section-title-accent text-xl font-semibold text-foreground">8. Güvenlik ve uyumluluk</h2>
             <p className="text-muted-foreground">
               Kimlik doğrulama (Auth.js), HTTPS, hassas verilerin şifrelenmesi ve denetim kayıtları (AuditLog) kullanılır. Organizasyon bazlı veri izolasyonu vardır. GDPR ve SOC 2 / HIPAA uyumlu bir mimari hedeflenir.
             </p>
           </section>
 
           <section className="flex flex-wrap gap-4 border-t border-border/60 pt-10">
-            <Button asChild>
+            <Button variant="outline" asChild>
               <Link href="/guide" className="gap-2">
                 Kullanım kılavuzu
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link href="/">Ana sayfa</Link>
-            </Button>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
