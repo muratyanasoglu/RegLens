@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { useTranslations } from "@/components/locale-provider"
 import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -37,6 +38,7 @@ type DashboardMetrics = {
 
 export default function AnalyticsPage() {
   const { data: session } = useSession()
+  const t = useTranslations().t
   const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
   const [loading, setLoading] = useState(true)
@@ -159,7 +161,7 @@ titleKey="analytics.title"
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie
-                    data={m.tasksByStatus.length ? m.tasksByStatus : [{ status: "No data", count: 1 }]}
+                    data={m.tasksByStatus.length ? m.tasksByStatus : [{ status: t("common.noData"), count: 1 }]}
                     dataKey="count"
                     nameKey="status"
                     cx="50%"
@@ -189,7 +191,7 @@ titleKey="analytics.title"
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie
-                    data={m.riskDistribution.length ? m.riskDistribution : [{ level: "No data", count: 1 }]}
+                    data={m.riskDistribution.length ? m.riskDistribution : [{ level: t("common.noData"), count: 1 }]}
                     dataKey="count"
                     nameKey="level"
                     cx="50%"

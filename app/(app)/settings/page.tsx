@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useTranslations } from "@/components/locale-provider"
 import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,6 +20,7 @@ import {
 import { Eye, EyeOff, Database, Brain, Clock, Link2, User, Lock } from "lucide-react"
 
 export default function SettingsPage() {
+  const t = useTranslations().t
   const [showApiKey, setShowApiKey] = useState(false)
   const [mistralKey, setMistralKey] = useState("")
   const [mistralModel, setMistralModel] = useState("mistral-large-latest")
@@ -39,18 +41,18 @@ export default function SettingsPage() {
           <CardHeader className="flex flex-row items-center gap-2">
             <User className="h-4 w-4 text-primary" />
             <div>
-              <CardTitle className="text-sm font-medium text-card-foreground">Hesap ve Kimlik Doğrulama</CardTitle>
-              <CardDescription>Şifre değiştirme, güvenlik sorusu ve oturum</CardDescription>
+              <CardTitle className="text-sm font-medium text-card-foreground">{t("settings.authCardTitle")}</CardTitle>
+              <CardDescription>{t("settings.authCardDesc")}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-sm text-muted-foreground">
-              Kullanıcı adı, e-posta, şifre ve şifre kurtarma güvenlik sorusunu yönetmek için Kimlik Doğrulama sayfasına gidin.
+              {t("settings.authCardText")}
             </p>
             <Button asChild variant="outline" size="sm" className="w-fit">
               <Link href="/security/authentication">
                 <Lock className="mr-2 h-4 w-4" />
-                Kimlik Doğrulama ayarları
+                {t("settings.authCardLink")}
               </Link>
             </Button>
           </CardContent>
@@ -61,20 +63,20 @@ export default function SettingsPage() {
           <CardHeader className="flex flex-row items-center gap-2">
             <Database className="h-4 w-4 text-primary" />
             <div>
-              <CardTitle className="text-sm font-medium text-card-foreground">Database</CardTitle>
-              <CardDescription>MySQL connection configuration</CardDescription>
+              <CardTitle className="text-sm font-medium text-card-foreground">{t("settings.databaseTitle")}</CardTitle>
+              <CardDescription>{t("settings.databaseDesc")}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-card-foreground">Connection Status</p>
-                <p className="text-xs text-muted-foreground">MySQL 8.0 via Prisma ORM</p>
+                <p className="text-sm text-card-foreground">{t("settings.connectionStatus")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.databaseTech")}</p>
               </div>
-              <Badge className="border-0 bg-success text-success-foreground">Demo Mode</Badge>
+              <Badge className="border-0 bg-success text-success-foreground">{t("settings.demoMode")}</Badge>
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Database URL</Label>
+              <Label>{t("settings.databaseUrl")}</Label>
               <Input
                 type="password"
                 value="mysql://root:****@localhost:3306/reglens"
@@ -82,7 +84,7 @@ export default function SettingsPage() {
                 className="font-mono text-xs"
               />
               <p className="text-xs text-muted-foreground">
-                Set via DATABASE_URL environment variable
+                {t("settings.databaseUrlHint")}
               </p>
             </div>
           </CardContent>
@@ -93,17 +95,17 @@ export default function SettingsPage() {
           <CardHeader className="flex flex-row items-center gap-2">
             <Brain className="h-4 w-4 text-primary" />
             <div>
-              <CardTitle className="text-sm font-medium text-card-foreground">AI Provider</CardTitle>
-              <CardDescription>Mistral AI configuration</CardDescription>
+              <CardTitle className="text-sm font-medium text-card-foreground">{t("settings.aiProviderTitle")}</CardTitle>
+              <CardDescription>{t("settings.aiProviderDesc")}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label>API Key</Label>
+              <Label>{t("settings.apiKeyLabel")}</Label>
               <div className="relative">
                 <Input
                   type={showApiKey ? "text" : "password"}
-                  placeholder="Enter your Mistral API key..."
+                  placeholder={t("settings.apiKeyPlaceholder")}
                   value={mistralKey}
                   onChange={(e) => setMistralKey(e.target.value)}
                   className="pr-10"
@@ -117,11 +119,11 @@ export default function SettingsPage() {
                 </button>
               </div>
               <p className="text-xs text-muted-foreground">
-                {mistralKey ? "Key configured" : "No API key set - using deterministic mock outputs"}
+                {mistralKey ? t("settings.keyConfigured") : t("settings.noApiKeySet")}
               </p>
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Model</Label>
+              <Label>{t("settings.modelLabel")}</Label>
               <Select value={mistralModel} onValueChange={setMistralModel}>
                 <SelectTrigger>
                   <SelectValue />
@@ -134,7 +136,7 @@ export default function SettingsPage() {
               </Select>
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Embedding Model</Label>
+              <Label>{t("settings.embeddingModelLabel")}</Label>
               <Input value="mistral-embed" readOnly className="font-mono text-xs" />
             </div>
           </CardContent>
@@ -145,37 +147,37 @@ export default function SettingsPage() {
           <CardHeader className="flex flex-row items-center gap-2">
             <Clock className="h-4 w-4 text-primary" />
             <div>
-              <CardTitle className="text-sm font-medium text-card-foreground">Background Jobs</CardTitle>
-              <CardDescription>Automated source polling and processing</CardDescription>
+              <CardTitle className="text-sm font-medium text-card-foreground">{t("settings.backgroundJobsTitle")}</CardTitle>
+              <CardDescription>{t("settings.backgroundJobsDesc")}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-card-foreground">Source Polling</p>
+                <p className="text-sm text-card-foreground">{t("settings.sourcePolling")}</p>
                 <p className="text-xs text-muted-foreground">
-                  Automatically fetch and process regulatory updates
+                  {t("settings.sourcePollingDesc")}
                 </p>
               </div>
               <Switch checked={cronEnabled} onCheckedChange={setCronEnabled} />
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Poll Interval (minutes)</Label>
+              <Label>{t("settings.pollIntervalLabel")}</Label>
               <Select value={cronInterval} onValueChange={setCronInterval}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="15">Every 15 minutes</SelectItem>
-                  <SelectItem value="30">Every 30 minutes</SelectItem>
-                  <SelectItem value="60">Every hour</SelectItem>
-                  <SelectItem value="360">Every 6 hours</SelectItem>
-                  <SelectItem value="1440">Daily</SelectItem>
+                  <SelectItem value="15">{t("settings.every15min")}</SelectItem>
+                  <SelectItem value="30">{t("settings.every30min")}</SelectItem>
+                  <SelectItem value="60">{t("settings.everyHour")}</SelectItem>
+                  <SelectItem value="360">{t("settings.every6hours")}</SelectItem>
+                  <SelectItem value="1440">{t("settings.daily")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <p className="text-xs text-muted-foreground">
-              Cron endpoint: <code className="font-mono text-xs">/api/cron/poll-sources</code>
+              {t("settings.cronEndpointHint")} <code className="font-mono text-xs">/api/cron/poll-sources</code>
             </p>
           </CardContent>
         </Card>
@@ -185,29 +187,29 @@ export default function SettingsPage() {
           <CardHeader className="flex flex-row items-center gap-2">
             <Link2 className="h-4 w-4 text-primary" />
             <div>
-              <CardTitle className="text-sm font-medium text-card-foreground">Integrations</CardTitle>
-              <CardDescription>Task management export integrations</CardDescription>
+              <CardTitle className="text-sm font-medium text-card-foreground">{t("settings.integrationsTitle")}</CardTitle>
+              <CardDescription>{t("settings.integrationsDesc")}</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center justify-between rounded-lg border p-3">
               <div>
-                <p className="text-sm font-medium text-card-foreground">Jira</p>
-                <p className="text-xs text-muted-foreground">Export tasks to Jira projects</p>
+                <p className="text-sm font-medium text-card-foreground">{t("settings.jiraTitle")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.jiraDesc")}</p>
               </div>
-              <Badge variant="outline" className="bg-transparent">Export Ready</Badge>
+              <Badge variant="outline" className="bg-transparent">{t("settings.exportReady")}</Badge>
             </div>
             <div className="flex items-center justify-between rounded-lg border p-3">
               <div>
-                <p className="text-sm font-medium text-card-foreground">Asana</p>
-                <p className="text-xs text-muted-foreground">Sync tasks with Asana workspaces</p>
+                <p className="text-sm font-medium text-card-foreground">{t("settings.asanaTitle")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.asanaDesc")}</p>
               </div>
-              <Badge variant="secondary">Placeholder</Badge>
+              <Badge variant="secondary">{t("settings.placeholder")}</Badge>
             </div>
           </CardContent>
         </Card>
 
-        <Button className="self-end">Save Settings</Button>
+        <Button className="self-end">{t("settings.saveSettings")}</Button>
         </div>
       </div>
     </div>

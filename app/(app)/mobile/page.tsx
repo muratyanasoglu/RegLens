@@ -22,32 +22,32 @@ export default function MobilePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Smartphone className="w-5 h-5" />
-              iOS Installation
+              {t("mobile.iosTitle")}
             </CardTitle>
-            <CardDescription>Install on iPhone or iPad</CardDescription>
+            <CardDescription>{t("mobile.iosDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ol className="space-y-2 text-sm">
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">1.</span>
-                <span>Open this page in Safari browser</span>
+                <span>{t("mobile.iosStep1")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">2.</span>
-                <span>Tap the Share button at the bottom</span>
+                <span>{t("mobile.iosStep2")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">3.</span>
-                <span>Select "Add to Home Screen"</span>
+                <span>{t("mobile.iosStep3")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">4.</span>
-                <span>Tap Add to complete installation</span>
+                <span>{t("mobile.iosStep4")}</span>
               </li>
             </ol>
             <Button className="w-full">
               <Download className="w-4 h-4 mr-2" />
-              Open in Safari
+              {t("mobile.openInSafari")}
             </Button>
           </CardContent>
         </Card>
@@ -56,32 +56,32 @@ export default function MobilePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Smartphone className="w-5 h-5" />
-              Android Installation
+              {t("mobile.androidTitle")}
             </CardTitle>
-            <CardDescription>Install on Android phone or tablet</CardDescription>
+            <CardDescription>{t("mobile.androidDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <ol className="space-y-2 text-sm">
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">1.</span>
-                <span>Open this page in Chrome browser</span>
+                <span>{t("mobile.androidStep1")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">2.</span>
-                <span>Tap the menu (3 dots) at the top right</span>
+                <span>{t("mobile.androidStep2")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">3.</span>
-                <span>Select "Install app"</span>
+                <span>{t("mobile.androidStep3")}</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-semibold text-muted-foreground">4.</span>
-                <span>Tap Install to complete</span>
+                <span>{t("mobile.androidStep4")}</span>
               </li>
             </ol>
             <Button className="w-full">
               <Download className="w-4 h-4 mr-2" />
-              Open in Chrome
+              {t("mobile.openInChrome")}
             </Button>
           </CardContent>
         </Card>
@@ -89,16 +89,16 @@ export default function MobilePage() {
 
         <Card className="card-premium card-hover">
         <CardHeader>
-          <CardTitle>Progressive Web App Features</CardTitle>
+          <CardTitle>{t("mobile.pwaFeatures")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid gap-3 md:grid-cols-2">
             <div className="flex gap-3 p-3 rounded-lg border">
               <Lock className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
-                <p className="font-medium">Secure Connection</p>
+                <p className="font-medium">{t("mobile.secureConnection")}</p>
                 <p className="text-sm text-muted-foreground">
-                  All data encrypted with HTTPS
+                  {t("mobile.secureConnectionDesc")}
                 </p>
               </div>
             </div>
@@ -106,9 +106,9 @@ export default function MobilePage() {
             <div className="flex gap-3 p-3 rounded-lg border">
               <Zap className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
-                <p className="font-medium">Offline Access</p>
+                <p className="font-medium">{t("mobile.offlineSupport")}</p>
                 <p className="text-sm text-muted-foreground">
-                  View cached data without internet
+                  {t("mobile.offlineSupportDesc")}
                 </p>
               </div>
             </div>
@@ -116,9 +116,9 @@ export default function MobilePage() {
             <div className="flex gap-3 p-3 rounded-lg border">
               <Bell className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
               <div>
-                <p className="font-medium">Push Notifications</p>
+                <p className="font-medium">{t("mobile.pushNotifications")}</p>
                 <p className="text-sm text-muted-foreground">
-                  Get alerts for new tasks and updates
+                  {t("mobile.pushNotificationsDesc")}
                 </p>
               </div>
             </div>

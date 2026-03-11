@@ -166,7 +166,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <Card className="glass-card card-premium w-full max-w-md p-8">
-          <p className="text-muted-foreground">{t("common.loading")}</p>
+          <p className="text-muted-foreground">Loading...</p>
         </Card>
       }
     >

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { useTranslations } from "@/components/locale-provider"
 import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -30,6 +31,7 @@ type Source = {
 
 export default function SourcesPage() {
   const { data: session } = useSession()
+  const t = useTranslations().t
   const organizationId = (session?.user as { organizationId?: string } | undefined)?.organizationId
   const [sourceList, setSourceList] = useState<Source[]>([])
   const [loading, setLoading] = useState(true)
@@ -203,7 +205,7 @@ export default function SourcesPage() {
                     <span className="text-xs text-muted-foreground">
                       {source.lastPolled
                         ? `Polled ${formatDistanceToNow(new Date(source.lastPolled), { addSuffix: true })}`
-                        : "Never polled"}
+                        : t("sources.neverPolled")}
                     </span>
                     <Button
                       variant="outline"
@@ -214,7 +216,7 @@ export default function SourcesPage() {
                       <RefreshCw
                         className={`mr-1 h-3 w-3 ${polling === source.id ? "animate-spin" : ""}`}
                       />
-                      {polling === source.id ? "Polling..." : "Poll Now"}
+                      {polling === source.id ? t("sources.polling") : t("sources.pollNow")}
                     </Button>
                   </div>
                 </div>

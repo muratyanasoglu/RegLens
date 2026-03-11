@@ -6,8 +6,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { StatusBadge, PriorityBadge, ConfidenceBadge, EvidenceStatusBadge } from "@/components/risk-badge"
+import { BackToLink } from "@/components/back-to-link"
+import { TaskDetailInfo } from "@/components/task-detail-info"
 import { format } from "date-fns"
-import { ArrowLeft, User, Calendar, Shield, FileText } from "lucide-react"
+import { FileText, Shield } from "lucide-react"
 import { getSessionAndOrg } from "@/lib/auth-server"
 import { getTaskById } from "@/lib/db-queries"
 
@@ -29,12 +31,7 @@ export default async function TaskDetailPage({
   return (
     <div className="flex flex-col">
       <TranslatedPageHeader titleKey="tasks.detail">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/tasks">
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to Tasks
-          </Link>
-        </Button>
+        <BackToLink href="/tasks" labelKey="commonBackTo.tasks" />
       </TranslatedPageHeader>
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
@@ -51,31 +48,11 @@ export default async function TaskDetailPage({
               <h2 className="text-xl font-semibold text-card-foreground">{task.title}</h2>
               <p className="text-sm leading-relaxed text-muted-foreground">{task.description}</p>
               <Separator />
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Assignee</p>
-                    <p className="text-sm text-card-foreground">{assigneeName ?? "Unassigned"}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Due Date</p>
-                    <p className="text-sm text-card-foreground">
-                      {task.dueDate ? format(task.dueDate, "MMM d, yyyy") : "Not set"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-xs text-muted-foreground">Control</p>
-                    <p className="text-sm font-mono text-primary">{controlRef}</p>
-                  </div>
-                </div>
-              </div>
+              <TaskDetailInfo
+                assigneeName={assigneeName}
+                dueDate={task.dueDate}
+                controlRef={controlRef}
+              />
             </div>
           </CardContent>
         </Card>

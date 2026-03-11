@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useTranslations } from "@/components/locale-provider"
 import { PageHeader } from "@/components/page-header"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -30,6 +31,7 @@ type Framework = {
 
 export default function FrameworkDetailPage() {
   const params = useParams()
+  const t = useTranslations().t
   const id = params?.id as string
   const [framework, setFramework] = useState<Framework | null>(null)
   const [otherFrameworks, setOtherFrameworks] = useState<Framework[]>([])
@@ -63,10 +65,10 @@ export default function FrameworkDetailPage() {
   if (!framework) {
     return (
       <div className="py-12 text-center">
-        <h1 className="text-lg font-semibold">Framework not found</h1>
+        <h1 className="text-lg font-semibold">{t("frameworks.notFound")}</h1>
         <Link href="/frameworks" className="mt-2 inline-flex items-center text-sm text-primary hover:underline">
           <ArrowLeft className="mr-1 h-4 w-4" />
-          Back to Frameworks
+          {t("commonBackTo.frameworks")}
         </Link>
       </div>
     )
@@ -81,7 +83,7 @@ export default function FrameworkDetailPage() {
         <Button variant="outline" size="sm" asChild>
           <Link href="/frameworks">
             <ArrowLeft className="mr-1 h-4 w-4" />
-            Back
+            {t("common.back")}
           </Link>
         </Button>
       </PageHeader>

@@ -27,7 +27,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 })
   }
   const { name } = parsed.data
-  let slug = parsed.data.slug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-") ?? name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "org"
+  let slug =
+    (parsed.data.slug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-") ??
+      name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")) ||
+    "org"
   let n = 0
   while (await prisma.organization.findUnique({ where: { slug } })) {
     n += 1

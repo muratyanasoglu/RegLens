@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -27,7 +27,7 @@ import { useTranslations } from "@/components/locale-provider"
 
 type InviteInfo = { email: string; role: string; organizationName: string; invitedByName: string }
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations().t
@@ -238,5 +238,19 @@ export default function RegisterPage() {
         </CardFooter>
       </form>
     </Card>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback } from "react"
+import { Suspense, useState, useEffect, useRef, useCallback } from "react"
 import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -38,7 +38,7 @@ type Message = {
 
 const POLL_INTERVAL_MS = 3000
 
-export default function MessagesPage() {
+function MessagesContent() {
   const t = useTranslations().t
   const searchParams = useSearchParams()
   const [conversations, setConversations] = useState<Conversation[]>([])
@@ -372,5 +372,19 @@ export default function MessagesPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="content-max flex min-h-[200px] items-center justify-center py-12 text-muted-foreground">
+          Loading...
+        </div>
+      }
+    >
+      <MessagesContent />
+    </Suspense>
   )
 }

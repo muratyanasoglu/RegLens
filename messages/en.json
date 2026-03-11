@@ -15,7 +15,8 @@
     "unassigned": "Unassigned",
     "image": "Image",
     "file": "File",
-    "connectionError": "Connection error."
+    "connectionError": "Connection error.",
+    "noData": "No data"
   },
   "badges": {
     "riskLevel": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
@@ -247,7 +248,10 @@
   },
   "sources": {
     "title": "Regulatory Sources",
-    "description": "Manage RSS feeds and regulatory data sources"
+    "description": "Manage RSS feeds and regulatory data sources",
+    "neverPolled": "Never polled",
+    "pollNow": "Poll Now",
+    "polling": "Polling..."
   },
   "updates": {
     "title": "Regulatory Updates",
@@ -276,7 +280,8 @@
   "frameworks": {
     "title": "Compliance Frameworks",
     "description": "Regulatory and compliance frameworks from database",
-    "detail": "Framework"
+    "detail": "Framework",
+    "notFound": "Framework not found"
   },
   "compliance": {
     "title": "Compliance Frameworks",
@@ -294,7 +299,52 @@
   },
   "settings": {
     "title": "Settings",
-    "description": "Configure RegLens integrations and preferences"
+    "description": "Configure RegLens integrations and preferences",
+    "keyConfigured": "Key configured",
+    "noApiKeySet": "No API key set - using deterministic mock outputs",
+    "authCardTitle": "Account & Authentication",
+    "authCardDesc": "Password change, security question and session",
+    "authCardText": "Go to the Authentication page to manage username, email, password and security question.",
+    "authCardLink": "Authentication settings",
+    "databaseTitle": "Database",
+    "databaseDesc": "MySQL connection configuration",
+    "connectionStatus": "Connection Status",
+    "databaseTech": "MySQL 8.0 via Prisma ORM",
+    "demoMode": "Demo Mode",
+    "databaseUrl": "Database URL",
+    "databaseUrlHint": "Set via DATABASE_URL environment variable",
+    "aiProviderTitle": "AI Provider",
+    "aiProviderDesc": "Mistral AI configuration",
+    "apiKeyLabel": "API Key",
+    "apiKeyPlaceholder": "Enter your Mistral API key...",
+    "modelLabel": "Model",
+    "embeddingModelLabel": "Embedding Model",
+    "backgroundJobsTitle": "Background Jobs",
+    "backgroundJobsDesc": "Automated source polling and processing",
+    "sourcePolling": "Source Polling",
+    "sourcePollingDesc": "Automatically fetch and process regulatory updates",
+    "pollIntervalLabel": "Poll Interval (minutes)",
+    "cronEndpointHint": "Cron endpoint:",
+    "every15min": "Every 15 minutes",
+    "every30min": "Every 30 minutes",
+    "everyHour": "Every hour",
+    "every6hours": "Every 6 hours",
+    "daily": "Daily",
+    "integrationsTitle": "Integrations",
+    "integrationsDesc": "Task management export integrations",
+    "jiraTitle": "Jira",
+    "jiraDesc": "Export tasks to Jira projects",
+    "asanaTitle": "Asana",
+    "asanaDesc": "Sync tasks with Asana workspaces",
+    "exportReady": "Export Ready",
+    "placeholder": "Placeholder",
+    "saveSettings": "Save Settings"
+  },
+  "commonBackTo": {
+    "tasks": "Back to Tasks",
+    "updates": "Back to Updates",
+    "frameworks": "Back to Frameworks",
+    "auditPacks": "Back to Audit Packs"
   },
   "integrations": {
     "title": "GRC Platform Integrations",
@@ -376,7 +426,33 @@
   "mobile": {
     "title": "Mobile & PWA Support",
     "description": "Install ComplianceHub as a mobile app on any device",
-    "fastLoading": "Fast Loading"
+    "fastLoading": "Fast Loading",
+    "iosTitle": "iOS Installation",
+    "iosDesc": "Install on iPhone or iPad",
+    "iosStep1": "Open this page in Safari browser",
+    "iosStep2": "Tap the Share button at the bottom",
+    "iosStep3": "Select \"Add to Home Screen\"",
+    "iosStep4": "Tap Add to complete installation",
+    "openInSafari": "Open in Safari",
+    "androidTitle": "Android Installation",
+    "androidDesc": "Install on Android phone or tablet",
+    "androidStep1": "Open this page in Chrome browser",
+    "androidStep2": "Tap the menu (3 dots) at the top right",
+    "androidStep3": "Select \"Install app\"",
+    "androidStep4": "Tap Install to complete",
+    "openInChrome": "Open in Chrome",
+    "pwaFeatures": "Progressive Web App Features",
+    "secureConnection": "Secure Connection",
+    "secureConnectionDesc": "All data is transmitted over HTTPS.",
+    "offlineSupport": "Offline Support",
+    "offlineSupportDesc": "Use key features when offline.",
+    "pushNotifications": "Push Notifications",
+    "pushNotificationsDesc": "Get alerts for tasks and updates."
+  },
+  "tasksDetail": {
+    "dueDate": "Due Date",
+    "control": "Control",
+    "assignee": "Assignee"
   },
   "updatesDetail": {
     "title": "Update Detail"

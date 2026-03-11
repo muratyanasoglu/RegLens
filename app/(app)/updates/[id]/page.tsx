@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
+import { BackToLink } from "@/components/back-to-link"
 import { TranslatedPageHeader } from "@/components/translated-page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -48,12 +49,7 @@ export default async function UpdateDetailPage({
   return (
     <div className="flex flex-col">
       <TranslatedPageHeader titleKey="updatesDetail.title">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/updates">
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to Updates
-          </Link>
-        </Button>
+        <BackToLink href="/updates" labelKey="commonBackTo.updates" />
       </TranslatedPageHeader>
 
       <div className="content-max flex flex-col gap-8 py-6 lg:py-8">
